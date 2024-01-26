@@ -9,16 +9,18 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import { useNavigate } from "react-router-dom";
 
+import { useProfile } from "providers/ProfileProvider";
+
 const pages = ["Interviews", "My Interviews"];
-const settings = ["Profile", "Logout"];
+const settings = ["Profile"];
 
 function ResponsiveAppBar() {
   const navigator = useNavigate();
+  const { profile, setProfile } = useProfile();
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -48,6 +50,13 @@ function ResponsiveAppBar() {
     navigator(`/${link.toLowerCase().replace(" ", "-")}`);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigator("/login");
+    handleCloseUserMenu();
+    setProfile(null);
+  };
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -73,7 +82,6 @@ function ResponsiveAppBar() {
           >
             IM
           </Typography>
-
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -132,47 +140,55 @@ function ResponsiveAppBar() {
           >
             Interview Mentor
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleClickLink(page)}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleClickLink(setting)}>
-                  {setting}
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+          {profile && (
+            <>
+              <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+                {pages.map((page) => (
+                  <Button
+                    key={page}
+                    onClick={handleClickLink(page)}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                  >
+                    {page}
+                  </Button>
+                ))}
+              </Box>
+              <Box sx={{ flexGrow: 0 }}>
+                <Button onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar
+                    alt={profile.name}
+                    src="/static/images/avatar/2.jpg"
+                  />
+                  <Typography color="white" sx={{ marginLeft: "5px" }}>
+                    {profile.name}
+                  </Typography>
+                </Button>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <MenuItem key={setting} onClick={handleClickLink(setting)}>
+                      {setting}
+                    </MenuItem>
+                  ))}
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </Menu>
+              </Box>
+            </>
+          )}
         </Toolbar>
       </Container>
     </AppBar>
