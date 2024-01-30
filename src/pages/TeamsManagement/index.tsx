@@ -15,6 +15,10 @@ import {
   Box,
   Typography,
   FormControl,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 import { ReferenceType } from "api/types";
@@ -38,6 +42,7 @@ export default function BasicTable() {
   const [updatedTeam, setUpdatedTeam] = useState<string>("");
   const [updateOpen, setUpdateOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<number>(0);
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
 
   const { openSnackbar } = useSnackbar();
 
@@ -78,13 +83,20 @@ export default function BasicTable() {
   };
 
   const handleDeleteTeam = async (id: number) => {
+    setSelectedRow(id);
+    setDeleteConfirmationOpen(true);
+  };
+
+  const confirmDeleteTeam = async () => {
     try {
-      await api.deleteTeam(id);
+      await api.deleteTeam(selectedRow);
       getTeams();
       openSnackbar("Team deleted successfully.", "success");
     } catch (error) {
       console.log(error);
       openSnackbar("Failed to delete team.", "error");
+    } finally {
+      setDeleteConfirmationOpen(false);
     }
   };
 
@@ -180,6 +192,26 @@ export default function BasicTable() {
           </FormControl>
         </Box>
       </Modal>
+      <Dialog
+        open={deleteConfirmationOpen}
+        onClose={() => setDeleteConfirmationOpen(false)}
+      >
+        <DialogTitle>Delete Team</DialogTitle>
+        <DialogContent>
+          <Typography>Are you sure you want to delete this team?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            onClick={() => setDeleteConfirmationOpen(false)}
+          >
+            Cancel
+          </Button>
+          <Button variant="contained" onClick={confirmDeleteTeam} color="error">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
