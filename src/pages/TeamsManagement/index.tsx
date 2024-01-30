@@ -23,6 +23,7 @@ import {
 import { Delete, Edit } from "@mui/icons-material";
 import { ReferenceType } from "api/types";
 import { useSnackbar } from "providers/SnackbarProvider";
+import { useProfile } from "providers/ProfileProvider";
 
 const style = {
   position: "absolute" as "absolute",
@@ -43,6 +44,7 @@ export default function BasicTable() {
   const [updateOpen, setUpdateOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<number>(0);
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+  const { profile, setProfile } = useProfile();
 
   const { openSnackbar } = useSnackbar();
 
@@ -114,104 +116,119 @@ export default function BasicTable() {
 
   return (
     <div>
-      <div>
-        <Box>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Add A Team
-          </Typography>
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-            <TextField
-              label="Name"
-              value={newTeam}
-              onChange={(e) => setNewTeam(e.target.value)}
-              id="outlined-size-small"
-              defaultValue=""
-              size="small"
-            />
-          </FormControl>
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-            <Button variant="contained" onClick={handleAddTeam}>
-              Add
-            </Button>
-          </FormControl>
-        </Box>
-      </div>
-      <TableContainer sx={{ marginTop: 5 }} component={Paper}>
-        <Table aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Title</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {teams.map((team) => (
-              <TableRow key={team.id}>
-                <TableCell>{team.name}</TableCell>
-                <TableCell>
-                  <IconButton
-                    aria-label="edit"
-                    onClick={() => handleUpdateOpen(team)}
-                  >
-                    <Edit />
-                  </IconButton>
-                  <IconButton
-                    aria-label="delete"
-                    onClick={() => handleDeleteTeam(team.id)}
-                  >
-                    <Delete />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Modal open={updateOpen} onClose={handleUpdateClose}>
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Update Team Name
-          </Typography>
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-            <TextField
-              label="Name"
-              value={updatedTeam}
-              onChange={(e) => setUpdatedTeam(e.target.value)}
-              id="outlined-size-small"
-              defaultValue={oldTeamName}
-              size="small"
-            />
-          </FormControl>
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-            <Button
-              variant="contained"
-              onClick={() => handleUpdateTeam(selectedRow)}
-            >
-              Update
-            </Button>
-          </FormControl>
-        </Box>
-      </Modal>
-      <Dialog
-        open={deleteConfirmationOpen}
-        onClose={() => setDeleteConfirmationOpen(false)}
-      >
-        <DialogTitle>Delete Team</DialogTitle>
-        <DialogContent>
-          <Typography>Are you sure you want to delete this team?</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            variant="contained"
-            onClick={() => setDeleteConfirmationOpen(false)}
+      {profile && profile.role === "ADMIN" && (
+        <>
+          <div>
+            <Box>
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Add A Team
+              </Typography>
+              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                <TextField
+                  label="Name"
+                  value={newTeam}
+                  onChange={(e) => setNewTeam(e.target.value)}
+                  id="outlined-size-small"
+                  defaultValue=""
+                  size="small"
+                />
+              </FormControl>
+              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                <Button variant="contained" onClick={handleAddTeam}>
+                  Add
+                </Button>
+              </FormControl>
+            </Box>
+          </div>
+          <TableContainer sx={{ marginTop: 5 }} component={Paper}>
+            <Table aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Title</TableCell>
+                  <TableCell>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {teams.map((team) => (
+                  <TableRow key={team.id}>
+                    <TableCell>{team.name}</TableCell>
+                    <TableCell>
+                      <IconButton
+                        aria-label="edit"
+                        onClick={() => handleUpdateOpen(team)}
+                      >
+                        <Edit />
+                      </IconButton>
+                      <IconButton
+                        aria-label="delete"
+                        onClick={() => handleDeleteTeam(team.id)}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Modal open={updateOpen} onClose={handleUpdateClose}>
+            <Box sx={style}>
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Update Team Name
+              </Typography>
+              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                <TextField
+                  label="Name"
+                  value={updatedTeam}
+                  onChange={(e) => setUpdatedTeam(e.target.value)}
+                  id="outlined-size-small"
+                  defaultValue={oldTeamName}
+                  size="small"
+                />
+              </FormControl>
+              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                <Button
+                  variant="contained"
+                  onClick={() => handleUpdateTeam(selectedRow)}
+                >
+                  Update
+                </Button>
+              </FormControl>
+            </Box>
+          </Modal>
+          <Dialog
+            open={deleteConfirmationOpen}
+            onClose={() => setDeleteConfirmationOpen(false)}
           >
-            Cancel
-          </Button>
-          <Button variant="contained" onClick={confirmDeleteTeam} color="error">
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+            <DialogTitle>Delete Team</DialogTitle>
+            <DialogContent>
+              <Typography>
+                Are you sure you want to delete this team?
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                variant="contained"
+                onClick={() => setDeleteConfirmationOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                onClick={confirmDeleteTeam}
+                color="error"
+              >
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </>
+      )}
+      {profile && profile.role !== "ADMIN" && (
+        <div>
+          <h1>Access Denied. You don't have permission to access.</h1>
+        </div>
+      )}
     </div>
   );
 }
