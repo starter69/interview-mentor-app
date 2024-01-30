@@ -31,4 +31,25 @@ const Register = (data: UserRegisterRequest) =>
 
 const GetCurrentUser = () => apiService.get("auth/user");
 
-export { Login, Register, GetCurrentUser };
+// Users
+const getUsers = () => apiService.get("users");
+const addUser = (payload: {
+  name: string,
+  role: string,
+  team_id: number,
+  password: string
+}) => apiService.post("users", payload)
+const deleteUser = (id: number) => apiService.delete(`users/${id}`)
+const updateUser = (id: number, payload: {
+  name: string,
+  role: string,
+  team_id: number,
+  password: string
+}) => apiService.patch(`users/${id}`, payload)
+// const updateUser = ()
+
+// Teams
+const getTeams = () => apiService.get("teams");
+
+
+export { Login, Register, GetCurrentUser, getUsers, addUser, deleteUser, updateUser, getTeams};
