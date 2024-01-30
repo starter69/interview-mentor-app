@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -12,10 +13,9 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import { useNavigate } from "react-router-dom";
-
 import { useProfile } from "providers/ProfileProvider";
 
-const pages = ["Interviews", "My Interviews"];
+const pages = ["Interviews", "My Interviews", "Users"];
 const settings = ["Profile"];
 
 function ResponsiveAppBar() {
