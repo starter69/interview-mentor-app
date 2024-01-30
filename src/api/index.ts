@@ -42,6 +42,8 @@ const updateTeam = (id: number, name: string) =>
 
 const deleteTeam = (id: number) => apiService.delete(`teams/${id}`);
 
+const getTeam = (id: number) => apiService.get(`teams/${id}`);
+
 export {
   Login,
   Register,
@@ -50,4 +52,5 @@ export {
   addTeam,
   updateTeam,
   deleteTeam,
+  getTeam,
 };

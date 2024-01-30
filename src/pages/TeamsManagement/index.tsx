@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 import { ReferenceType } from "api/types";
+import { useSnackbar } from "providers/SnackbarProvider";
 
 const style = {
   position: "absolute" as "absolute",
@@ -33,9 +34,12 @@ const style = {
 export default function BasicTable() {
   const [teams, setTeams] = useState<ReferenceType[]>([]);
   const [newTeam, setNewTeam] = useState<string>("");
+  const [oldTeamName, setOldTeamName] = useState<string>("");
   const [updatedTeam, setUpdatedTeam] = useState<string>("");
   const [updateOpen, setUpdateOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<number>(0);
+
+  const { openSnackbar } = useSnackbar();
 
   const getTeams = async () => {
     try {
@@ -50,28 +54,45 @@ export default function BasicTable() {
     getTeams();
   }, []);
 
-  const handleAddTeam = () => {
+  const handleAddTeam = async () => {
     try {
-      api.addTeam(newTeam);
+      await api.addTeam(newTeam);
+      getTeams();
+      openSnackbar("Team added successfully.", "success");
     } catch (error) {
+      openSnackbar("Failed to create team.", "error");
       console.log(error);
     }
-    getTeams();
   };
 
-  const handleUpdateTeam = (id: number) => {
-    api.updateTeam(id, updatedTeam);
-    handleUpdateClose();
+  const handleUpdateTeam = async (id: number) => {
+    try {
+      await api.updateTeam(id, updatedTeam);
+      getTeams();
+      handleUpdateClose();
+      openSnackbar("Team name updated successfully.", "success");
+    } catch (error) {
+      console.log(error);
+      openSnackbar("Failed to update team name.", "error");
+    }
   };
 
-  const handleDeleteTeam = (id: number) => {
-    api.deleteTeam(id);
-    getTeams();
+  const handleDeleteTeam = async (id: number) => {
+    try {
+      await api.deleteTeam(id);
+      getTeams();
+      openSnackbar("Team deleted successfully.", "success");
+    } catch (error) {
+      console.log(error);
+      openSnackbar("Failed to delete team.", "error");
+    }
   };
 
-  const handleUpdateOpen = (id: number) => {
+  const handleUpdateOpen = async (team: ReferenceType) => {
     setUpdateOpen(true);
-    setSelectedRow(id);
+    setSelectedRow(team.id);
+    setOldTeamName(team.name);
+    setUpdatedTeam(team.name);
   };
 
   const handleUpdateClose = () => {
@@ -118,7 +139,7 @@ export default function BasicTable() {
                 <TableCell>
                   <IconButton
                     aria-label="edit"
-                    onClick={() => handleUpdateOpen(team.id)}
+                    onClick={() => handleUpdateOpen(team)}
                   >
                     <Edit />
                   </IconButton>
@@ -145,7 +166,7 @@ export default function BasicTable() {
               value={updatedTeam}
               onChange={(e) => setUpdatedTeam(e.target.value)}
               id="outlined-size-small"
-              defaultValue=""
+              defaultValue={oldTeamName}
               size="small"
             />
           </FormControl>
