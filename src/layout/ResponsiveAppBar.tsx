@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useProfile } from "providers/ProfileProvider";
 
-const pages = ["Interviews", "My Interviews"];
+const pages = ["Interviews", "My Interviews", "Teams Management"];
 const settings = ["Profile"];
 
 function ResponsiveAppBar() {
