@@ -64,7 +64,7 @@ const User: React.FC = () => {
     try {
       const [response1, response2] = await Promise.all([
         api.getUsers(),
-        api.getTeams(),
+        api.getAllTeams(),
       ]);
       setUsers(response1.data);
       setTeams(response2.data);

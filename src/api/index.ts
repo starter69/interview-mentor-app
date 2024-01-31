@@ -48,7 +48,29 @@ const updateUser = (id: number, payload: {
 }) => apiService.patch(`users/${id}`, payload)
 
 // Teams
-const getTeams = () => apiService.get("teams");
 
+const getAllTeams = () => apiService.get("teams");
 
-export { Login, Register, GetCurrentUser, getUsers, addUser, deleteUser, updateUser, getTeams};
+const addTeam = (name: string) => apiService.post("teams", { name });
+
+const updateTeam = (id: number, name: string) =>
+  apiService.patch(`teams/${id}`, { name });
+
+const deleteTeam = (id: number) => apiService.delete(`teams/${id}`);
+
+const getTeam = (id: number) => apiService.get(`teams/${id}`);
+
+export {
+  Login,
+  Register,
+  GetCurrentUser,
+  getAllTeams,
+  addTeam,
+  updateTeam,
+  deleteTeam,
+  getTeam,
+  getUsers,
+  addUser,
+  deleteUser,
+  updateUser,
+};

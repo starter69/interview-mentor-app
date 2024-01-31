@@ -15,7 +15,7 @@ import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import { useNavigate } from "react-router-dom";
 import { useProfile } from "providers/ProfileProvider";
 
-const pages = ["Interviews", "My Interviews", "Users"];
+const pages = ["Interviews", "My Interviews", "Users Management", "Teams Management"];
 const settings = ["Profile"];
 
 function ResponsiveAppBar() {

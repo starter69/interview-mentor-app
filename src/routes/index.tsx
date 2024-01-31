@@ -4,15 +4,17 @@ import MyInterview from "pages/MyInterview";
 import Profile from "pages/Profile";
 import Login from "pages/Login";
 import User from "pages/User"
+import TeamsManagement from "pages/TeamsManagement";
 
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/interviews" element={<Home />} />
       <Route path="/my-interviews" element={<MyInterview />} />
+      <Route path="/teams-management" element={<TeamsManagement />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/users" element={<User />} />
+      <Route path="/users-management" element={<User />} />
     </Routes>
   );
 };
