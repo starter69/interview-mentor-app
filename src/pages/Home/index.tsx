@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   FormControl,
-  Input,
   Modal,
   TextField,
   Typography,
@@ -25,7 +24,7 @@ const style = {
 
 const Home = () => {
   const { profile, setProfile } = useProfile();
-  const [updateOpen, setUpdateOpen] = useState(false);
+  const [dialogOpenStatus, setDialogOpenStatus] = useState(false);
   const [companyName, setCompanyName] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -36,14 +35,18 @@ const Home = () => {
   const { openSnackbar } = useSnackbar();
 
   const handleOpenDialog = async () => {
-    setUpdateOpen(true);
+    setDialogOpenStatus(true);
   };
 
-  const handleUpdateClose = () => {
-    setUpdateOpen(false);
+  const handleCloseDialog = () => {
+    setDialogOpenStatus(false);
   };
 
   const handleUpload = async () => {
+    if (!companyName || !selectedFile) {
+      return;
+    }
+
     const formData = new FormData();
     if (selectedFile != null) formData.append("file", selectedFile);
     formData.append("user_id", profile.id.toString());
@@ -55,6 +58,7 @@ const Home = () => {
     } catch (error) {
       openSnackbar("Failed to upload video.", "error");
     }
+    setDialogOpenStatus(false);
   };
 
   return (
@@ -62,7 +66,7 @@ const Home = () => {
       <Button variant="contained" color="primary" onClick={handleOpenDialog}>
         Upload
       </Button>
-      <Modal open={updateOpen} onClose={handleUpdateClose}>
+      <Modal open={dialogOpenStatus} onClose={handleCloseDialog}>
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Upload Interview Video
@@ -73,6 +77,8 @@ const Home = () => {
               id="outlined-size-small"
               size="small"
               onChange={handleFileChange}
+              error={!selectedFile}
+              helperText={!selectedFile && "File is required"}
             />
           </FormControl>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
@@ -82,11 +88,20 @@ const Home = () => {
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
               size="small"
+              error={!companyName}
+              helperText={!companyName && "Company Name is required"}
             />
           </FormControl>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
             <Button variant="contained" onClick={handleUpload}>
               Upload
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={handleCloseDialog}
+            >
+              Cancel
             </Button>
           </FormControl>
         </Box>
