@@ -1,9 +1,9 @@
 import { Route, Routes } from "react-router-dom";
-
 import Home from "pages/Home";
 import MyInterview from "pages/MyInterview";
 import Profile from "pages/Profile";
 import Login from "pages/Login";
+import User from "pages/User"
 import TeamsManagement from "pages/TeamsManagement";
 
 const AppRoutes = () => {
@@ -14,6 +14,7 @@ const AppRoutes = () => {
       <Route path="/teams-management" element={<TeamsManagement />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/users-management" element={<User />} />
     </Routes>
   );
 };
