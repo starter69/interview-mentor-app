@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useProfile } from "providers/ProfileProvider";
 
 const userPages = ["Interviews", "My Interviews"];
-const adminPages = [...userPages, "Teams Management"];
+const adminPages = [...userPages, "Teams Management", "Users Management"];
 const settings = ["Profile"];
 
 function ResponsiveAppBar() {
