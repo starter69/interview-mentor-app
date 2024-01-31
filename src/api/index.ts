@@ -63,6 +63,14 @@ const deleteTeam = (id: number) => apiService.delete(`teams/${id}`);
 
 const getTeam = (id: number) => apiService.get(`teams/${id}`);
 
+// Interview
+const uploadInterview = (formData: FormData) =>
+  apiService.post("/interviews/upload", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
 export {
   Login,
   Register,
@@ -76,4 +84,5 @@ export {
   addUser,
   deleteUser,
   updateUser,
+  uploadInterview,
 };
