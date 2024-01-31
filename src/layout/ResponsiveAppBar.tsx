@@ -15,7 +15,8 @@ import { useNavigate } from "react-router-dom";
 
 import { useProfile } from "providers/ProfileProvider";
 
-const pages = ["Interviews", "My Interviews", "Teams Management"];
+const userPages = ["Interviews", "My Interviews"];
+const adminPages = [...userPages, "Teams Management"];
 const settings = ["Profile"];
 
 function ResponsiveAppBar() {
@@ -82,42 +83,86 @@ function ResponsiveAppBar() {
           >
             IM
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleClickLink(page)}>
-                  {page}
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+          {profile && profile.role === "ADMIN" && (
+            <>
+              <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleOpenNavMenu}
+                  color="inherit"
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorElNav}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                  open={Boolean(anchorElNav)}
+                  onClose={handleCloseNavMenu}
+                  sx={{
+                    display: { xs: "block", md: "none" },
+                  }}
+                >
+                  {adminPages.map((page) => (
+                    <MenuItem key={page} onClick={handleClickLink(page)}>
+                      {page}
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+            </>
+          )}
+          {profile && profile.role !== "ADMIN" && (
+            <>
+              <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleOpenNavMenu}
+                  color="inherit"
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorElNav}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                  open={Boolean(anchorElNav)}
+                  onClose={handleCloseNavMenu}
+                  sx={{
+                    display: { xs: "block", md: "none" },
+                  }}
+                >
+                  {userPages.map((page) => (
+                    <MenuItem key={page} onClick={handleClickLink(page)}>
+                      {page}
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+            </>
+          )}
           <SupportAgentIcon
             sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
           />
@@ -140,10 +185,59 @@ function ResponsiveAppBar() {
           >
             Interview Mentor
           </Typography>
-          {profile && (
+          {profile && profile.role === "ADMIN" && (
             <>
               <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-                {pages.map((page) => (
+                {adminPages.map((page) => (
+                  <Button
+                    key={page}
+                    onClick={handleClickLink(page)}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                  >
+                    {page}
+                  </Button>
+                ))}
+              </Box>
+              <Box sx={{ flexGrow: 0 }}>
+                <Button onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar
+                    alt={profile.name}
+                    src="/static/images/avatar/2.jpg"
+                  />
+                  <Typography color="white" sx={{ marginLeft: "5px" }}>
+                    {profile.name}
+                  </Typography>
+                </Button>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <MenuItem key={setting} onClick={handleClickLink(setting)}>
+                      {setting}
+                    </MenuItem>
+                  ))}
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </Menu>
+              </Box>
+            </>
+          )}
+          {profile && profile.role !== "ADMIN" && (
+            <>
+              <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+                {userPages.map((page) => (
                   <Button
                     key={page}
                     onClick={handleClickLink(page)}
