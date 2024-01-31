@@ -24,3 +24,8 @@ export type InterviewType = {
   user_id: number;
   name: string;
 };
+
+export type TeamInfo = {
+  id: number;
+  name: string;
+}
