@@ -49,12 +49,16 @@ const updateUser = (id: number, payload: {
 
 // Teams
 
-const getAllTeams = () => apiService.get("teams");
+const getTeams = () => apiService.get("teams");
 
-const addTeam = (name: string) => apiService.post("teams", { name });
+const addTeam = (payload: {
+  name: string
+}) => apiService.post("teams", payload);
 
-const updateTeam = (id: number, name: string) =>
-  apiService.patch(`teams/${id}`, { name });
+const updateTeam = (id: number, payload: {
+  name: string
+}) =>
+  apiService.patch(`teams/${id}`, payload);
 
 const deleteTeam = (id: number) => apiService.delete(`teams/${id}`);
 
@@ -64,7 +68,7 @@ export {
   Login,
   Register,
   GetCurrentUser,
-  getAllTeams,
+  getTeams,
   addTeam,
   updateTeam,
   deleteTeam,
