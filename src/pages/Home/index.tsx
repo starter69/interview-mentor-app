@@ -3,6 +3,7 @@ import * as api from "api";
 import {
   Box,
   Button,
+  CircularProgress,
   FormControl,
   Modal,
   TextField,
@@ -27,6 +28,7 @@ const Home = () => {
   const [dialogOpenStatus, setDialogOpenStatus] = useState(false);
   const [companyName, setCompanyName] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleFileChange = (event: any) => {
     setSelectedFile(event.target.files[0]);
@@ -40,6 +42,8 @@ const Home = () => {
 
   const handleCloseDialog = () => {
     setDialogOpenStatus(false);
+    setSelectedFile(null);
+    setCompanyName("");
   };
 
   const handleUpload = async () => {
@@ -52,13 +56,16 @@ const Home = () => {
     formData.append("user_id", profile.id.toString());
     formData.append("name", companyName);
     formData.append("duration", "90");
+
+    setIsLoading(true);
     try {
       await api.uploadInterview(formData);
       openSnackbar("Your interview video uploaded successfully.", "success");
-    } catch (error) {
-      openSnackbar("Failed to upload video.", "error");
+    } catch (error: any) {
+      openSnackbar(error.response.data.message, "error");
     }
-    setDialogOpenStatus(false);
+    setIsLoading(false);
+    handleCloseDialog();
   };
 
   return (
@@ -92,9 +99,18 @@ const Home = () => {
               helperText={!companyName && "Company Name is required"}
             />
           </FormControl>
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-            <Button variant="contained" onClick={handleUpload}>
-              Upload
+          <Box sx={{ textAlign: "center" }}>
+            <Button
+              sx={{ marginRight: 3 }}
+              variant="contained"
+              onClick={handleUpload}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Upload"
+              )}
             </Button>
             <Button
               variant="contained"
@@ -103,7 +119,7 @@ const Home = () => {
             >
               Cancel
             </Button>
-          </FormControl>
+          </Box>
         </Box>
       </Modal>
     </Box>
