@@ -54,6 +54,12 @@ export default function SignIn() {
     }
   };
 
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSubmit();
+    }
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -88,6 +94,7 @@ export default function SignIn() {
               }}
               error={username.length === 0}
               helperText={username.length === 0 ? "Username is required." : ""}
+              onKeyDown={handleKeyPress}
             />
             <TextField
               margin="normal"
@@ -104,6 +111,7 @@ export default function SignIn() {
               }}
               error={password.length === 0}
               helperText={password.length === 0 ? "Password is required." : ""}
+              onKeyDown={handleKeyPress}
             />
             <Button
               fullWidth
