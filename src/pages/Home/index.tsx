@@ -52,10 +52,10 @@ const Home = () => {
     }
 
     const formData = new FormData();
-    if (selectedFile != null) formData.append("file", selectedFile);
     formData.append("user_id", profile.id.toString());
     formData.append("name", companyName);
     formData.append("duration", "90");
+    if (selectedFile != null) formData.append("file", selectedFile);
 
     setIsLoading(true);
     try {
