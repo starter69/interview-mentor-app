@@ -28,4 +28,4 @@ export type InterviewType = {
 export type TeamInfo = {
   id: number;
   name: string;
-}
+};
