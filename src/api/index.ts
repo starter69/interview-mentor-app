@@ -49,19 +49,20 @@ const updateUser = (
     password: string;
   }
 ) => apiService.patch(`users/${id}`, payload);
-
+const getUser = (id: number) => apiService.get(`users/${id}`);
 // Teams
 
 const getTeams = () => apiService.get("teams");
 
-const addTeam = (payload: {
-  name: string
-}) => apiService.post("teams", payload);
+const addTeam = (payload: { name: string }) =>
+  apiService.post("teams", payload);
 
-const updateTeam = (id: number, payload: {
-  name: string
-}) =>
-  apiService.patch(`teams/${id}`, payload);
+const updateTeam = (
+  id: number,
+  payload: {
+    name: string;
+  }
+) => apiService.patch(`teams/${id}`, payload);
 
 const deleteTeam = (id: number) => apiService.delete(`teams/${id}`);
 
@@ -74,6 +75,8 @@ const uploadInterview = (formData: FormData) =>
       "Content-Type": "multipart/form-data",
     },
   });
+
+const getInterviewDetail = (id: number) => apiService.get(`/interviews/${id}`);
 
 export {
   Login,
@@ -88,5 +91,7 @@ export {
   addUser,
   deleteUser,
   updateUser,
+  getUser,
   uploadInterview,
+  getInterviewDetail,
 };

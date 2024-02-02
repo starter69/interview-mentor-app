@@ -46,7 +46,10 @@ const Teams: React.FC = () => {
       const response = await api.getTeams();
       setTeams(response.data);
     } catch (error: any) {
-      openSnackbar(error?.response?.data.error ?? "Failed to fetch teams.", "error");
+      openSnackbar(
+        error?.response?.data.error ?? "Failed to fetch teams.",
+        "error"
+      );
     }
   };
 
@@ -60,12 +63,12 @@ const Teams: React.FC = () => {
   };
 
   const handleUpdateOpen = () => {
-    if(!rowSelectionModel?.length) {
+    if (!rowSelectionModel?.length) {
       return;
     }
-    const index = Number(rowSelectionModel[0])
-    const selectedTeam = teams.find((team) => team.id === index)
-    if(!selectedTeam){
+    const index = Number(rowSelectionModel[0]);
+    const selectedTeam = teams.find((team) => team.id === index);
+    if (!selectedTeam) {
       return;
     }
     setName(selectedTeam.name);
@@ -79,11 +82,11 @@ const Teams: React.FC = () => {
   };
 
   const handleDeleteOpen = () => {
-    if(!rowSelectionModel?.length) {
+    if (!rowSelectionModel?.length) {
       return;
     }
     setDeleteModalOpen(true);
-  }
+  };
 
   const handleDeleteClose = () => {
     setDeleteModalOpen(false);
@@ -96,7 +99,10 @@ const Teams: React.FC = () => {
       fetchTeams();
       openSnackbar("New team added successfully.", "success");
     } catch (error: any) {
-      openSnackbar(error?.response?.data.error ?? "Failed to add new team.", "error");
+      openSnackbar(
+        error?.response?.data.error ?? "Failed to add new team.",
+        "error"
+      );
     }
     handleAddClose();
   };
@@ -104,14 +110,14 @@ const Teams: React.FC = () => {
   const handleUpdate = async () => {
     try {
       if (!rowSelectionModel?.length) return;
-      await api.updateTeam(
-        Number(rowSelectionModel[0]),
-        { name }
-      );
+      await api.updateTeam(Number(rowSelectionModel[0]), { name });
       fetchTeams();
       openSnackbar("Team updated successfully.", "success");
     } catch (error: any) {
-      openSnackbar(error?.response?.data.error ?? "Failed to update team.", "error");
+      openSnackbar(
+        error?.response?.data.error ?? "Failed to update team.",
+        "error"
+      );
     }
     handleUpdateClose();
   };
@@ -119,14 +125,15 @@ const Teams: React.FC = () => {
   const handleDelete = async () => {
     try {
       if (!rowSelectionModel?.length) return;
-      await api.deleteTeam(
-        Number(rowSelectionModel[0])
-      );
+      await api.deleteTeam(Number(rowSelectionModel[0]));
       fetchTeams();
       handleDeleteClose();
       openSnackbar("Team deleted successfully.", "success");
     } catch (error: any) {
-      openSnackbar(error?.response?.data.error ?? "Failed to delete team.", "error");
+      openSnackbar(
+        error?.response?.data.error ?? "Failed to delete team.",
+        "error"
+      );
     }
   };
 
@@ -185,7 +192,10 @@ const Teams: React.FC = () => {
               size="small"
             />
           </FormControl>
-          <FormControl sx={{ m: 1, minWidth: 120, marginTop: '12px' }} size="small">
+          <FormControl
+            sx={{ m: 1, minWidth: 120, marginTop: "12px" }}
+            size="small"
+          >
             <Button variant="contained" onClick={handleAdd}>
               Add
             </Button>
@@ -197,7 +207,10 @@ const Teams: React.FC = () => {
           <Typography variant="h6" component="h2">
             Update Existing Team
           </Typography>
-          <FormControl sx={{ m: 1, minWidth: 120, marginTop: '12px' }} size="small">
+          <FormControl
+            sx={{ m: 1, minWidth: 120, marginTop: "12px" }}
+            size="small"
+          >
             <TextField
               label="Name"
               value={name}
@@ -205,7 +218,10 @@ const Teams: React.FC = () => {
               size="small"
             />
           </FormControl>
-          <FormControl sx={{ m: 1, minWidth: 120, marginTop: '12px'}} size="small">
+          <FormControl
+            sx={{ m: 1, minWidth: 120, marginTop: "12px" }}
+            size="small"
+          >
             <Button variant="contained" onClick={handleUpdate}>
               Update
             </Button>
@@ -217,7 +233,7 @@ const Teams: React.FC = () => {
           <Typography variant="h6" component="h2">
             Are you sure want to delete this team?
           </Typography>
-          <Box sx={{ textAlign: "right", marginTop: '12px' }}>
+          <Box sx={{ textAlign: "right", marginTop: "12px" }}>
             <Button variant="contained" onClick={handleDelete} color="error">
               Yes
             </Button>

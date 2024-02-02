@@ -19,13 +19,16 @@ export type ReferenceType = {
   name: string;
 };
 
-export type InterviewType = {
-  id: number;
-  user_id: number;
-  name: string;
-};
-
 export type TeamInfo = {
   id: number;
   name: string;
+};
+
+export type InterviewDetailType = {
+  id: number;
+  user_id: number;
+  name: string;
+  date: string;
+  duration: number;
+  path: string;
 };

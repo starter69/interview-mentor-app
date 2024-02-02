@@ -3,12 +3,14 @@ import Home from "pages/Home";
 import MyInterview from "pages/MyInterview";
 import Profile from "pages/Profile";
 import Login from "pages/Login";
-import User from "pages/User"
+import User from "pages/User";
 import TeamsManagement from "pages/TeamsManagement";
+import InterviewDetail from "pages/InterviewDetail";
 
 const AppRoutes = () => {
   return (
     <Routes>
+      <Route path="interviews/:id/detail" element={<InterviewDetail />} />
       <Route path="/interviews" element={<Home />} />
       <Route path="/my-interviews" element={<MyInterview />} />
       <Route path="/teams-management" element={<TeamsManagement />} />
