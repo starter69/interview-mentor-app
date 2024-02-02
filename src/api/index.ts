@@ -1,8 +1,8 @@
 import axios from "axios";
 import { UserLoginRequest, UserRegisterRequest } from "./types";
 
-const host = process.env.REACT_APP_API_HOST || "localhost";
-const port = process.env.REACT_APP_API_PORT || 3200;
+export const host = process.env.REACT_APP_API_HOST || "localhost";
+export const port = process.env.REACT_APP_API_PORT || 3200;
 
 const apiService = axios.create({
   baseURL: `http://${host}:${port}/`,

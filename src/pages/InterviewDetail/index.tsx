@@ -1,6 +1,7 @@
-import { Container, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import ReactPlayer from "react-player";
 import * as api from "api";
 import { InterviewDetailType } from "api/types";
 import { useSnackbar } from "providers/SnackbarProvider";
@@ -39,15 +40,12 @@ const InterviewDetail: React.FC = () => {
   };
   return (
     <Container>
-      {interviewDetail && (
-        <video controls>
-          <source
-            src={`http://localhost:3200/` + interviewDetail?.path}
-            type="video/mp4"
-          />
-          Your browser does not support the video tag.
-        </video>
-      )}
+      <Box sx={{ marginY: 3, display: "flex", justifyContent: "center" }}>
+        <ReactPlayer
+          url={`http://${api.host}:${api.port}/` + interviewDetail?.path}
+          controls
+        />
+      </Box>
       <Typography variant="h5">
         Company Name: {interviewDetail?.name}
       </Typography>
