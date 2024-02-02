@@ -1,8 +1,8 @@
 import axios from "axios";
 import { UserLoginRequest, UserRegisterRequest } from "./types";
 
-const host = process.env.REACT_APP_API_HOST || "localhost";
-const port = process.env.REACT_APP_API_PORT || 3200;
+export const host = process.env.REACT_APP_API_HOST || "localhost";
+export const port = process.env.REACT_APP_API_PORT || 3200;
 
 const apiService = axios.create({
   baseURL: `http://${host}:${port}/`,
@@ -34,31 +34,35 @@ const GetCurrentUser = () => apiService.get("auth/user");
 // Users
 const getUsers = () => apiService.get("users");
 const addUser = (payload: {
-  name: string,
-  role: string,
-  team_id: number,
-  password: string
-}) => apiService.post("users", payload)
-const deleteUser = (id: number) => apiService.delete(`users/${id}`)
-const updateUser = (id: number, payload: {
-  name: string,
-  role: string,
-  team_id: number,
-  password: string
-}) => apiService.patch(`users/${id}`, payload)
-
+  name: string;
+  role: string;
+  team_id: number;
+  password: string;
+}) => apiService.post("users", payload);
+const deleteUser = (id: number) => apiService.delete(`users/${id}`);
+const updateUser = (
+  id: number,
+  payload: {
+    name: string;
+    role: string;
+    team_id: number;
+    password: string;
+  }
+) => apiService.patch(`users/${id}`, payload);
+const getUser = (id: number) => apiService.get(`users/${id}`);
 // Teams
 
 const getTeams = () => apiService.get("teams");
 
-const addTeam = (payload: {
-  name: string
-}) => apiService.post("teams", payload);
+const addTeam = (payload: { name: string }) =>
+  apiService.post("teams", payload);
 
-const updateTeam = (id: number, payload: {
-  name: string
-}) =>
-  apiService.patch(`teams/${id}`, payload);
+const updateTeam = (
+  id: number,
+  payload: {
+    name: string;
+  }
+) => apiService.patch(`teams/${id}`, payload);
 
 const deleteTeam = (id: number) => apiService.delete(`teams/${id}`);
 
@@ -71,6 +75,8 @@ const uploadInterview = (formData: FormData) =>
       "Content-Type": "multipart/form-data",
     },
   });
+
+const getInterviewDetail = (id: number) => apiService.get(`/interviews/${id}`);
 
 export {
   Login,
@@ -85,5 +91,7 @@ export {
   addUser,
   deleteUser,
   updateUser,
+  getUser,
   uploadInterview,
+  getInterviewDetail,
 };
