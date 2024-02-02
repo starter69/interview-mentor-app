@@ -11,7 +11,6 @@ import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
-import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import { useNavigate } from "react-router-dom";
 import { useProfile } from "providers/ProfileProvider";
 
@@ -62,9 +61,21 @@ function ResponsiveAppBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <SupportAgentIcon
-            sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-          />
+          <Box
+            onClick={handleClickLink("interviews")}
+            sx={{
+              display: { xs: "none", md: "flex" },
+              cursor: "pointer",
+              marginRight: 1,
+            }}
+          >
+            <img
+              src="/logo512.png"
+              alt="Interview Mentor"
+              width={40}
+              height={40}
+            />
+          </Box>
           <Typography
             variant="h6"
             noWrap
@@ -163,9 +174,21 @@ function ResponsiveAppBar() {
               </Box>
             </>
           )}
-          <SupportAgentIcon
-            sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-          />
+          <Box
+            onClick={handleClickLink("interviews")}
+            sx={{
+              display: { xs: "flex", md: "none" },
+              cursor: "pointer",
+              marginRight: 1,
+            }}
+          >
+            <img
+              src="/logo512.png"
+              alt="Interview Mentor"
+              width={40}
+              height={40}
+            />
+          </Box>
           <Typography
             variant="h5"
             noWrap
