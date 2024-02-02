@@ -37,10 +37,6 @@ const Teams: React.FC = () => {
     useState<GridRowSelectionModel>();
   const { openSnackbar } = useSnackbar();
 
-  useEffect(() => {
-    fetchTeams();
-  }, []);
-
   const fetchTeams = async () => {
     try {
       const response = await api.getTeams();
@@ -52,6 +48,10 @@ const Teams: React.FC = () => {
       );
     }
   };
+
+  useEffect(() => {
+    fetchTeams();
+  }, []);
 
   const handleAddModalOpen = () => {
     setAddModalOpen(true);

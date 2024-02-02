@@ -12,7 +12,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useSnackbar } from "providers/SnackbarProvider";
-import { TeamInfo, UserInfo } from "api/types";
+import { TeamInfo } from "api/types";
 
 const style = {
   position: "absolute" as "absolute",
@@ -26,7 +26,7 @@ const style = {
 };
 
 const columns: GridColDef[] = [
-  { field: "id", headerName: "ID", flex: 1 },
+  { field: "id", headerName: "#", flex: 1 },
   { field: "name", headerName: "User Name", flex: 1 },
   { field: "team_name", headerName: "Team Name", flex: 1 },
   {
@@ -37,11 +37,11 @@ const columns: GridColDef[] = [
 ];
 
 type User = {
-  id: number,
-  name: string,
-  team_name: string,
-  role: string
-}
+  id: number;
+  name: string;
+  team_name: string;
+  role: string;
+};
 
 const Users: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -57,9 +57,42 @@ const Users: React.FC = () => {
   const roles = ["ADMIN", "LEAD", "USER"];
   const { openSnackbar } = useSnackbar();
 
+  const fetchUsersAndTeams = async () => {
+    try {
+      const [response1, response2] = await Promise.all([
+        api.getUsers(),
+        api.getTeams(),
+      ]);
+
+      const formattedUsers = await response1.data.map(
+        (user: {
+          id: number;
+          name: string;
+          role: string;
+          team_id: number;
+          team: {
+            name: string;
+          };
+        }) => ({
+          id: user.id,
+          name: user.name,
+          role: user.role,
+          team_name: user.team ? user.team.name : "No Team",
+        })
+      );
+      setUsers(formattedUsers);
+      setTeams([{ id: -1, name: "No Team" }, ...response2.data]);
+    } catch (error: any) {
+      openSnackbar(
+        error?.response?.data.error ?? "Failed to fetch users and teams.",
+        "error"
+      );
+    }
+  };
+
   useEffect(() => {
     fetchUsersAndTeams();
-  }, []);
+  }, [fetchUsersAndTeams]);
 
   const handleRole = (event: SelectChangeEvent) => {
     setRole(event.target.value);
@@ -67,33 +100,6 @@ const Users: React.FC = () => {
 
   const handleTeam = (event: SelectChangeEvent) => {
     setTeam(event.target.value);
-  };
-
-  const fetchUsersAndTeams = async () => {
-    try {
-      const [response1, response2] = await Promise.all([
-        api.getUsers(),
-        api.getTeams(),
-      ]);
-      const formattedUsers =  await response1.data.map((user: {
-        id: number,
-        name: string,
-        role: string,
-        team_id: number,
-        team: {
-          name: string
-        }
-      }) => ({
-        id: user.id,
-        name: user.name,
-        role: user.role,
-        team_name: user.team ? user.team.name : 'No Team'
-      }));
-      setUsers(formattedUsers);
-      setTeams([{id: -1, name: "No Team"}, ...response2.data]);
-    } catch (error: any) {
-      openSnackbar(error?.response?.data.error ?? "Failed to fetch users and teams.", "error");
-    }
   };
 
   const handleAddModalOpen = () => {
@@ -108,15 +114,14 @@ const Users: React.FC = () => {
   };
 
   const handleUpdateOpen = () => {
-    if(!rowSelectionModel?.length) {
+    if (!rowSelectionModel?.length) {
       return;
     }
-    const index = Number(rowSelectionModel[0])
-    const selectedUser = users.find((user) => user.id === index)
-    if(!selectedUser){
+    const index = Number(rowSelectionModel[0]);
+    const selectedUser = users.find((user) => user.id === index);
+    if (!selectedUser) {
       return;
     }
-    console.log(selectedUser.team_name)
     setName(selectedUser.name);
     setRole(selectedUser.role);
     setTeam(selectedUser.team_name);
@@ -132,11 +137,11 @@ const Users: React.FC = () => {
   };
 
   const handleDeleteOpen = () => {
-    if(!rowSelectionModel?.length) {
+    if (!rowSelectionModel?.length) {
       return;
     }
     setDeleteModalOpen(true);
-  }
+  };
 
   const handleDeleteClose = () => {
     setDeleteModalOpen(false);
@@ -145,23 +150,31 @@ const Users: React.FC = () => {
 
   const handleAdd = async () => {
     try {
-      const selectedTeam = teams.find((item) => item.name === team)
-      if(!selectedTeam) {
+      const selectedTeam = teams.find((item) => item.name === team);
+      if (!selectedTeam) {
         await api.addUser({ name, role, team_id: -1, password: "12345678" });
       } else {
-        await api.addUser({ name, role, team_id: selectedTeam.id, password: "12345678" });
+        await api.addUser({
+          name,
+          role,
+          team_id: selectedTeam.id,
+          password: "12345678",
+        });
       }
       fetchUsersAndTeams();
       openSnackbar("New user added successfully.", "success");
     } catch (error: any) {
-      openSnackbar(error?.response?.data.error ?? "Failed to add new user.", "error");
+      openSnackbar(
+        error?.response?.data.error ?? "Failed to add new user.",
+        "error"
+      );
     }
     handleAddClose();
   };
 
   const handleUpdate = async () => {
     try {
-      const selectedTeam = teams.find(item => item.name === team)
+      const selectedTeam = teams.find((item) => item.name === team);
       if (!rowSelectionModel?.length || !selectedTeam) {
         return;
       }
@@ -172,7 +185,10 @@ const Users: React.FC = () => {
       fetchUsersAndTeams();
       openSnackbar("User updated successfully.", "success");
     } catch (error: any) {
-      openSnackbar(error?.response?.data.error ?? "Failed to update team.", "error");
+      openSnackbar(
+        error?.response?.data.error ?? "Failed to update team.",
+        "error"
+      );
     }
     handleUpdateClose();
   };
@@ -187,7 +203,10 @@ const Users: React.FC = () => {
       handleDeleteClose();
       openSnackbar("User deleted successfully.", "success");
     } catch (error: any) {
-      openSnackbar(error?.response?.data.error ?? "Failed to delete team.", "error");
+      openSnackbar(
+        error?.response?.data.error ?? "Failed to delete team.",
+        "error"
+      );
     }
   };
 
@@ -248,11 +267,7 @@ const Users: React.FC = () => {
           </FormControl>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
             <InputLabel>Role</InputLabel>
-            <Select
-              value={role}
-              label="Role"
-              onChange={handleRole}
-            >
+            <Select value={role} label="Role" onChange={handleRole}>
               <MenuItem value={"ADMIN"}>ADMIN</MenuItem>
               <MenuItem value={"LEAD"}>LEAD</MenuItem>
               <MenuItem value={"USER"}>USER</MenuItem>
@@ -260,11 +275,7 @@ const Users: React.FC = () => {
           </FormControl>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
             <InputLabel>Team</InputLabel>
-            <Select
-              value={team.toString()}
-              label="Role"
-              onChange={handleTeam}
-            >
+            <Select value={team.toString()} label="Role" onChange={handleTeam}>
               {teams.length > 0 &&
                 teams.map((t, index) => {
                   return (
@@ -297,11 +308,7 @@ const Users: React.FC = () => {
           </FormControl>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
             <InputLabel>Role</InputLabel>
-            <Select
-              value={role}
-              label="Role"
-              onChange={handleRole}
-            >
+            <Select value={role} label="Role" onChange={handleRole}>
               {roles.map((role, index) => {
                 return (
                   <MenuItem value={role} key={index}>
@@ -313,11 +320,7 @@ const Users: React.FC = () => {
           </FormControl>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
             <InputLabel>Team</InputLabel>
-            <Select
-              value={team.toString()}
-              label="Role"
-              onChange={handleTeam}
-            >
+            <Select value={team.toString()} label="Role" onChange={handleTeam}>
               {teams.length > 0 &&
                 teams.map((t) => {
                   return (

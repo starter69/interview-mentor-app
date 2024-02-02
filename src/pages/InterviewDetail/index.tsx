@@ -17,27 +17,28 @@ const InterviewDetail: React.FC = () => {
   const { openSnackbar } = useSnackbar();
 
   useEffect(() => {
+    const fetchInterviewDetail = async () => {
+      try {
+        const response = await api.getInterviewDetail(Number(id));
+        setInterviewDetail(response.data);
+
+        const user = await api.getUser(response.data.user_id);
+        setUsername(user.data?.name);
+
+        setDuration(convertSecondsToHMS(response.data.duration));
+
+        setDate(convertDateFormat(response.data.date));
+      } catch (error: any) {
+        openSnackbar(
+          error?.response?.data.error ?? "Failed to fetch interview detail.",
+          "error"
+        );
+      }
+    };
+
     fetchInterviewDetail();
-  }, []);
+  }, [id, openSnackbar]);
 
-  const fetchInterviewDetail = async () => {
-    try {
-      const response = await api.getInterviewDetail(Number(id));
-      setInterviewDetail(response.data);
-
-      const user = await api.getUser(response.data.user_id);
-      setUsername(user.data?.name);
-
-      setDuration(convertSecondsToHMS(response.data.duration));
-
-      setDate(convertDateFormat(response.data.date));
-    } catch (error: any) {
-      openSnackbar(
-        error?.response?.data.error ?? "Failed to fetch interview detail.",
-        "error"
-      );
-    }
-  };
   return (
     <Container>
       <Box sx={{ marginY: 3, display: "flex", justifyContent: "center" }}>

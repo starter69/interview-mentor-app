@@ -32,7 +32,7 @@ export const ProfileProvider = ({ children }: { children: ReactElement }) => {
     };
 
     getProfile();
-  }, [location]);
+  }, [location, navigator]);
 
   return (
     <ProfileContext.Provider value={{ profile, setProfile }}>

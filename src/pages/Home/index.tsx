@@ -24,7 +24,7 @@ const style = {
 };
 
 const Home = () => {
-  const { profile, setProfile } = useProfile();
+  const { profile } = useProfile();
   const [dialogOpenStatus, setDialogOpenStatus] = useState(false);
   const [companyName, setCompanyName] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
