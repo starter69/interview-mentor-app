@@ -34,21 +34,18 @@ const GetCurrentUser = () => apiService.get("auth/user");
 // Users
 const getUsers = () => apiService.get("users");
 const addUser = (payload: {
-  name: string;
-  role: string;
-  team_id: number;
-  password: string;
-}) => apiService.post("users", payload);
-const deleteUser = (id: number) => apiService.delete(`users/${id}`);
-const updateUser = (
-  id: number,
-  payload: {
-    name: string;
-    role: string;
-    team_id: number;
-    password: string;
-  }
-) => apiService.patch(`users/${id}`, payload);
+  name: string,
+  role: string,
+  team_id: number,
+  password: string
+}) => apiService.post("users", payload)
+const deleteUser = (id: number) => apiService.delete(`users/${id}`)
+const updateUser = (id: number, payload: {
+  name: string,
+  role: string,
+  team_id: number,
+  password: string
+}) => apiService.patch(`users/${id}`, payload)
 
 // Teams
 
