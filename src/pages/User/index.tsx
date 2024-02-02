@@ -28,7 +28,7 @@ const style = {
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", flex: 1 },
   { field: "name", headerName: "User Name", flex: 1 },
-  { field: "team_id", headerName: "Team Name", flex: 1 },
+  { field: "team_name", headerName: "Team Name", flex: 1 },
   {
     field: "role",
     headerName: "Role",
@@ -36,13 +36,20 @@ const columns: GridColDef[] = [
   },
 ];
 
+type User = {
+  id: number,
+  name: string,
+  team_name: string,
+  role: string
+}
+
 const Users: React.FC = () => {
-  const [users, setUsers] = useState<UserInfo[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [role, setRole] = useState("");
-  const [team, setTeam] = useState(1);
+  const [team, setTeam] = useState("");
   const [teams, setTeams] = useState<TeamInfo[]>([]);
   const [name, setName] = useState("");
   const [rowSelectionModel, setRowSelectionModel] =
@@ -59,7 +66,7 @@ const Users: React.FC = () => {
   };
 
   const handleTeam = (event: SelectChangeEvent) => {
-    setTeam(Number(event.target.value));
+    setTeam(event.target.value);
   };
 
   const fetchUsersAndTeams = async () => {
@@ -68,8 +75,22 @@ const Users: React.FC = () => {
         api.getUsers(),
         api.getTeams(),
       ]);
-      setUsers(response1.data);
-      setTeams(response2.data);
+      const formattedUsers =  await response1.data.map((user: {
+        id: number,
+        name: string,
+        role: string,
+        team_id: number,
+        team: {
+          name: string
+        }
+      }) => ({
+        id: user.id,
+        name: user.name,
+        role: user.role,
+        team_name: user.team ? user.team.name : 'No Team'
+      }));
+      setUsers(formattedUsers);
+      setTeams([{id: -1, name: "No Team"}, ...response2.data]);
     } catch (error: any) {
       openSnackbar(error?.response?.data.error ?? "Failed to fetch users and teams.", "error");
     }
@@ -83,7 +104,7 @@ const Users: React.FC = () => {
     setAddModalOpen(false);
     setName("");
     setRole("");
-    setTeam(1);
+    setTeam("");
   };
 
   const handleUpdateOpen = () => {
@@ -95,9 +116,10 @@ const Users: React.FC = () => {
     if(!selectedUser){
       return;
     }
+    console.log(selectedUser.team_name)
     setName(selectedUser.name);
     setRole(selectedUser.role);
-    setTeam(selectedUser.team_id);
+    setTeam(selectedUser.team_name);
     setUpdateModalOpen(true);
   };
 
@@ -106,7 +128,7 @@ const Users: React.FC = () => {
     setRowSelectionModel([]);
     setName("");
     setRole("");
-    setTeam(1);
+    setTeam("");
   };
 
   const handleDeleteOpen = () => {
@@ -123,7 +145,12 @@ const Users: React.FC = () => {
 
   const handleAdd = async () => {
     try {
-      await api.addUser({ name, role, team_id: team, password: "12345678" });
+      const selectedTeam = teams.find((item) => item.name === team)
+      if(!selectedTeam) {
+        await api.addUser({ name, role, team_id: -1, password: "12345678" });
+      } else {
+        await api.addUser({ name, role, team_id: selectedTeam.id, password: "12345678" });
+      }
       fetchUsersAndTeams();
       openSnackbar("New user added successfully.", "success");
     } catch (error: any) {
@@ -134,10 +161,13 @@ const Users: React.FC = () => {
 
   const handleUpdate = async () => {
     try {
-      if (!rowSelectionModel?.length) return;
+      const selectedTeam = teams.find(item => item.name === team)
+      if (!rowSelectionModel?.length || !selectedTeam) {
+        return;
+      }
       await api.updateUser(
         Number(rowSelectionModel[rowSelectionModel.length - 1]),
-        { name, role, team_id: team, password: "12345678" }
+        { name, role, team_id: selectedTeam.id, password: "12345678" }
       );
       fetchUsersAndTeams();
       openSnackbar("User updated successfully.", "success");
@@ -291,7 +321,7 @@ const Users: React.FC = () => {
               {teams.length > 0 &&
                 teams.map((t) => {
                   return (
-                    <MenuItem value={t.id} key={t.id}>
+                    <MenuItem value={t.name} key={t.id}>
                       {t.name}
                     </MenuItem>
                   );
