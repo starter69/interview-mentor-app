@@ -30,7 +30,7 @@ const MyInterview: React.FC = () => {
       <Typography sx={{ marginTop: "16px", marginBottom: "10px", fontStyle: 'italic'}} variant="h4" gutterBottom>
         Welcome to the My Interview Page
       </Typography>
-      <Grid container spacing={2} sx={{ padding: "12px" }}>
+      <Grid container spacing={2} sx={{ padding: "12px" }} columns={{ xs: 4, sm: 8, md: 12 }}>
         {myInterviews.length > 0 && myInterviews.map((interview, index) => {
           return (
             <Grid item xs={2} key={index}>
