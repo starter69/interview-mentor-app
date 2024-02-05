@@ -78,6 +78,14 @@ const uploadInterview = (formData: FormData) =>
 
 const getInterviewDetail = (id: number) => apiService.get(`/interviews/${id}`);
 
+const getInterviews = () => apiService.get('interviews');
+
+const getMyInterviews = (userId: number) => apiService.get(`interviews/user/${userId}`)
+
+const deleteInterview = (id: number) => apiService.delete(`interviews/${id}`)
+
+// const updateInterview = (id: number)
+
 export {
   Login,
   Register,
@@ -94,4 +102,7 @@ export {
   getUser,
   uploadInterview,
   getInterviewDetail,
+  getInterviews,
+  getMyInterviews,
+  deleteInterview
 };
