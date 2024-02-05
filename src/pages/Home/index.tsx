@@ -34,7 +34,7 @@ const Home = () => {
   const { profile } = useProfile();
   const [dialogOpenStatus, setDialogOpenStatus] = useState(false);
   const [companyName, setCompanyName] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [interviews, setInterviews] = useState<InterviewDetailType[]>([]);
@@ -74,6 +74,12 @@ const Home = () => {
     setIsSubmitted(true);
 
     if (!companyName || !selectedFile) {
+      return;
+    }
+
+    const allowedFileTypes = ["video/mp4"];
+    if (!allowedFileTypes.includes(selectedFile.type)) {
+      openSnackbar("Only MP4 files are allowed for now.", "error");
       return;
     }
 
