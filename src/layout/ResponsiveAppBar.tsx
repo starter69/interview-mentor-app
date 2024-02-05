@@ -77,7 +77,7 @@ function ResponsiveAppBar() {
             />
           </Box>
           <Typography
-            variant="h6"
+            variant="h5"
             noWrap
             component="a"
             onClick={handleClickLink("interviews")}
@@ -92,7 +92,7 @@ function ResponsiveAppBar() {
               cursor: "pointer",
             }}
           >
-            IM
+            Interview Mentor
           </Typography>
           {profile && profile.role === "ADMIN" && (
             <>
