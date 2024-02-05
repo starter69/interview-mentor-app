@@ -1,10 +1,10 @@
 import { Route, Routes } from "react-router-dom";
 import Home from "pages/Home";
-import MyInterview from "pages/MyInterview";
 import Profile from "pages/Profile";
 import Login from "pages/Login";
 import Management from "pages/Management";
 import InterviewDetail from "pages/InterviewDetail";
+import MyInterview from "pages/MyInterview";
 
 const AppRoutes = () => {
   return (
