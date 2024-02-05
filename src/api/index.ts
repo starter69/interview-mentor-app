@@ -80,7 +80,7 @@ const getInterviewDetail = (id: number) => apiService.get(`/interviews/${id}`);
 
 const getInterviews = () => apiService.get('interviews');
 
-const getMyInterviews = (userId: number) => apiService.get(`interviews/${userId}`)
+const getMyInterviews = (userId: number) => apiService.get(`interviews/user/${userId}`)
 
 const deleteInterview = (id: number) => apiService.delete(`interviews/${id}`)
 
