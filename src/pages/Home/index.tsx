@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
+import playBtn from "assets/play-btn.png";
 import * as api from "api";
 import {
   Box,
@@ -11,6 +13,11 @@ import {
 } from "@mui/material";
 import { useProfile } from "providers/ProfileProvider";
 import { useSnackbar } from "providers/SnackbarProvider";
+import { InterviewDetailType } from "api/types";
+import Grid from "@mui/material/Grid";
+import { useNavigate } from "react-router-dom";
+
+import "../../index.css";
 
 const style = {
   position: "absolute" as "absolute",
@@ -29,6 +36,21 @@ const Home = () => {
   const [companyName, setCompanyName] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [interviews, setInterviews] = useState<InterviewDetailType[]>([]);
+  const navigator = useNavigate()
+
+  const fetchInterviews = async () => {
+    try {
+      const response = await api.getInterviews();
+      setInterviews(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchInterviews();
+  }, []);
 
   const handleFileChange = (event: any) => {
     setSelectedFile(event.target.files[0]);
@@ -69,10 +91,37 @@ const Home = () => {
   };
 
   return (
-    <Box sx={{ marginTop: 3 }}>
+    <Box>
+      <Typography sx={{ marginTop: "16px", marginBottom: "16px", fontStyle: 'italic'}} variant="h4" gutterBottom>
+        Welcome to the Interview Page
+      </Typography>
       <Button variant="contained" color="primary" onClick={handleOpenDialog}>
         Upload
       </Button>
+      <Grid container spacing={2} sx={{ padding: "12px" }}>
+        {interviews.map((interview, index) => {
+          return (
+            <Grid item xs={2} key={index}>
+              <Box className="interview-component" onClick={() => {
+                navigator(`/interviews/${interview.id}/detail`);
+              }}>
+                <Typography style={{ color: "white" }}>
+                  {interview.name} - {interview.user_id}
+                </Typography>
+                <Box
+                  component="img"
+                  sx={{
+                    height: 50,
+                    width: 50,
+                  }}
+                  alt="playbtn"
+                  src={playBtn}
+                />
+              </Box>
+            </Grid>
+          );
+        })}
+      </Grid>
       <Modal open={dialogOpenStatus} onClose={handleCloseDialog}>
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
