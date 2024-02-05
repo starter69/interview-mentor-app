@@ -87,6 +87,7 @@ const Home = () => {
     try {
       await api.uploadInterview(formData);
       openSnackbar("Your interview video uploaded successfully.", "success");
+      fetchInterviews();
     } catch (error: any) {
       openSnackbar(error.response.data.message, "error");
     }
@@ -143,7 +144,6 @@ const Home = () => {
               type="file"
               id="outlined-size-small"
               size="small"
-              value={selectedFile}
               onChange={handleFileChange}
               error={isSubmitted === true && !selectedFile}
               helperText={
