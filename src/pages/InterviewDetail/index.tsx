@@ -44,6 +44,8 @@ const InterviewDetail: React.FC = () => {
       <Box sx={{ marginY: 3, display: "flex", justifyContent: "center" }}>
         <ReactPlayer
           url={`http://${api.host}:${api.port}/` + interviewDetail?.path}
+          width="1366"
+          height="768"
           controls
         />
       </Box>
