@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -9,7 +10,6 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
 import * as api from "api";
 import { useSnackbar } from "providers/SnackbarProvider";
 import { useNavigate } from "react-router";
@@ -24,10 +24,9 @@ function Copyright(props: any) {
     >
       {"Copyright © "}
       <Link color="inherit" href="/interviews">
-        Interview Mentor
+        Team3/JH
       </Link>{" "}
       {new Date().getFullYear()}
-      {"."}
     </Typography>
   );
 }
