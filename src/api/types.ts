@@ -31,4 +31,7 @@ export type InterviewDetailType = {
   date: string;
   duration: number;
   path: string;
+  user: {
+    name: string
+  }
 };

@@ -31,7 +31,13 @@ const teamStyle = {
 };
 
 const teamColumns: GridColDef[] = [
-  { field: "id", headerName: "ID", flex: 1 },
+  {
+    field: 'id',
+    headerName: '',
+    width: 50,
+    renderCell: (params) => <span>#</span>,
+    flex: 1,
+  },
   { field: "name", headerName: "Team Name", flex: 1 },
 ];
 
@@ -47,7 +53,12 @@ const userStyle = {
 };
 
 const userColumns: GridColDef[] = [
-  { field: "id", headerName: "ID", flex: 1 },
+  {
+    field: 'id',
+    headerName: '',
+    width: 50,
+    renderCell: (params) => <span>#</span>,
+  },
   { field: "name", headerName: "User Name", flex: 1 },
   { field: "team_name", headerName: "Team Name", flex: 1 },
   {
@@ -85,6 +96,7 @@ const Management: React.FC = () => {
   const [addUserModalOpen, setAddUserModalOpen] = useState(false);
   const [updateUserModalOpen, setUpdateUserModalOpen] = useState(false);
   const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [teams, setTeams] = useState<TeamInfo[]>([]);
   const [originTeams, setOriginTeams] = useState<TeamInfo[]>([]);
@@ -159,6 +171,7 @@ const Management: React.FC = () => {
 
   const handleTeamUpdateOpen = () => {
     if (!teamRowSelectionModel?.length) {
+      setConfirmModalOpen(true)
       return;
     }
     const index = Number(teamRowSelectionModel[0]);
@@ -178,6 +191,7 @@ const Management: React.FC = () => {
 
   const handleTeamDeleteOpen = () => {
     if (!teamRowSelectionModel?.length) {
+      setConfirmModalOpen(true)
       return;
     }
     setDeleteTeamModalOpen(true);
@@ -204,7 +218,10 @@ const Management: React.FC = () => {
 
   const handleTeamUpdate = async () => {
     try {
-      if (!teamRowSelectionModel?.length) return;
+      if (!teamRowSelectionModel?.length){
+        setConfirmModalOpen(true)
+        return;
+      } 
       await api.updateTeam(Number(teamRowSelectionModel[0]), {
         name: teamName,
       });
@@ -221,7 +238,10 @@ const Management: React.FC = () => {
 
   const handleTeamDelete = async () => {
     try {
-      if (!teamRowSelectionModel?.length) return;
+      if (!teamRowSelectionModel?.length) {
+        setConfirmModalOpen(true)
+        return;
+      }
       await api.deleteTeam(Number(teamRowSelectionModel[0]));
       fetchUsersAndTeams();
       handleTeamDeleteClose();
@@ -247,6 +267,7 @@ const Management: React.FC = () => {
 
   const handleUpdateOpen = () => {
     if (!userRowSelectionModel?.length) {
+      setConfirmModalOpen(true)
       return;
     }
     const index = Number(userRowSelectionModel[0]);
@@ -254,7 +275,6 @@ const Management: React.FC = () => {
     if (!selectedUser) {
       return;
     }
-    console.log(selectedUser.team_name);
     setUserName(selectedUser.name);
     setRole(selectedUser.role);
     setTeam(selectedUser.team_name);
@@ -271,6 +291,7 @@ const Management: React.FC = () => {
 
   const handleDeleteOpen = () => {
     if (!userRowSelectionModel?.length) {
+      setConfirmModalOpen(true)
       return;
     }
     setDeleteUserModalOpen(true);
@@ -280,6 +301,10 @@ const Management: React.FC = () => {
     setDeleteUserModalOpen(false);
     setUserRowSelectionModel([]);
   };
+
+  const handleConfirmClose = () => {
+    setConfirmModalOpen(false);
+  }
 
   const handleAdd = async () => {
     try {
@@ -597,6 +622,7 @@ const Management: React.FC = () => {
                 })}
             </Select>
           </FormControl>
+
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
             <Button variant="contained" onClick={handleUpdate}>
               Update
@@ -619,6 +645,18 @@ const Management: React.FC = () => {
               onClick={handleDeleteClose}
             >
               No
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+      <Modal open={confirmModalOpen} onClose={handleConfirmClose}>
+        <Box sx={userStyle}>
+          <Typography variant="h6" component="h2">
+          Please select a row first.
+          </Typography>
+          <Box sx={{ textAlign: "right" }}>
+            <Button variant="contained" onClick={handleConfirmClose} color="error">
+              Okay
             </Button>
           </Box>
         </Box>

@@ -27,9 +27,6 @@ const MyInterview: React.FC = () => {
 
   return (
     <Box>
-      <Typography sx={{ marginTop: "16px", marginBottom: "10px", fontStyle: 'italic'}} variant="h4" gutterBottom>
-        Welcome to the My Interview Page
-      </Typography>
       <Grid container spacing={2} sx={{ padding: "12px" }} columns={{ xs: 4, sm: 8, md: 12 }}>
         {myInterviews.length > 0 && myInterviews.map((interview, index) => {
           return (
@@ -53,6 +50,7 @@ const MyInterview: React.FC = () => {
             </Grid>
           );
         })}
+        {myInterviews.length === 0 && <Grid item xs={12}><Typography variant="h6">No Interviews yet</Typography></Grid>}
       </Grid>
     </Box>
   );
