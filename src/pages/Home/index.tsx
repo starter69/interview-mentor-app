@@ -34,8 +34,9 @@ const Home = () => {
   const { profile } = useProfile();
   const [dialogOpenStatus, setDialogOpenStatus] = useState(false);
   const [companyName, setCompanyName] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [interviews, setInterviews] = useState<InterviewDetailType[]>([]);
   const navigator = useNavigate();
 
@@ -66,10 +67,19 @@ const Home = () => {
     setDialogOpenStatus(false);
     setSelectedFile(null);
     setCompanyName("");
+    setIsSubmitted(false);
   };
 
   const handleUpload = async () => {
+    setIsSubmitted(true);
+
     if (!companyName || !selectedFile) {
+      return;
+    }
+
+    const allowedFileTypes = ["video/mp4"];
+    if (!allowedFileTypes.includes(selectedFile.type)) {
+      openSnackbar("Only MP4 files are allowed for now.", "error");
       return;
     }
 
@@ -83,6 +93,7 @@ const Home = () => {
     try {
       await api.uploadInterview(formData);
       openSnackbar("Your interview video uploaded successfully.", "success");
+      fetchInterviews();
     } catch (error: any) {
       openSnackbar(error.response.data.message, "error");
     }
@@ -143,8 +154,10 @@ const Home = () => {
               id='outlined-size-small'
               size='small'
               onChange={handleFileChange}
-              error={!selectedFile}
-              helperText={!selectedFile && "File is required"}
+              error={isSubmitted === true && !selectedFile}
+              helperText={
+                isSubmitted === true && !selectedFile && "File is required"
+              }
             />
           </FormControl>
           <FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
@@ -153,9 +166,13 @@ const Home = () => {
               id='outlined-size-small'
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
-              size='small'
-              error={!companyName}
-              helperText={!companyName && "Company Name is required"}
+              size="small"
+              error={isSubmitted === true && !companyName}
+              helperText={
+                isSubmitted === true &&
+                !companyName &&
+                "Company Name is required"
+              }
             />
           </FormControl>
           <Box sx={{ textAlign: "center" }}>

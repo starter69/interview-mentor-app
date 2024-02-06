@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 
 import { Box, Container, Typography } from "@mui/material";
+import BusinessIcon from "@mui/icons-material/Business";
+import SupportAgentIcon from "@mui/icons-material/SupportAgent";
+import PunchClockIcon from "@mui/icons-material/PunchClock";
+import EventNoteIcon from "@mui/icons-material/EventNote";
 import { useParams } from "react-router-dom";
 import ReactPlayer from "react-player";
 import * as api from "api";
@@ -39,19 +43,49 @@ const InterviewDetail: React.FC = () => {
   }, [id, openSnackbar]);
 
   return (
-    <Container>
-      <Box sx={{ marginY: 3, display: "flex", justifyContent: "center" }}>
+    <Container maxWidth="md">
+      <Box sx={{ marginY: 3, display: "flex" }}>
         <ReactPlayer
           url={`http://${api.host}:${api.port}/` + interviewDetail?.path}
+          width="100%"
+          height="auto"
           controls
         />
       </Box>
-      <Typography variant="h5">
-        Company Name: {interviewDetail?.name}
-      </Typography>
-      <Typography variant="h6">Interviewee: {username}</Typography>
-      <Typography variant="h6">Interview Duration: {duration}</Typography>
-      <Typography variant="h6">Interview Date: {date}</Typography>
+      <Box sx={{ display: "flex" }}>
+        <Box sx={{ width: "50%" }}>
+          <Typography
+            variant="body1"
+            sx={{ display: "flex", alignSelf: "center" }}
+          >
+            <SupportAgentIcon sx={{ marginRight: 2 }} />
+            {username}
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{ display: "flex", alignSelf: "center" }}
+          >
+            <BusinessIcon sx={{ marginRight: 2 }} />
+            {interviewDetail?.name}
+          </Typography>
+        </Box>
+        <Box sx={{ width: "50%" }}>
+          <Typography
+            variant="body1"
+            sx={{ display: "flex", alignSelf: "center" }}
+          >
+            <EventNoteIcon sx={{ marginRight: 2 }} />
+            {date}
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{ display: "flex", alignSelf: "center" }}
+          >
+            <PunchClockIcon sx={{ marginRight: 2 }} />
+            {duration}
+          </Typography>
+        </Box>
+      </Box>
     </Container>
   );
 };

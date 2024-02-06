@@ -38,12 +38,14 @@ const defaultTheme = createTheme();
 export default function SignIn() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const navigator = useNavigate();
 
   const { openSnackbar } = useSnackbar();
 
   const handleSubmit = async () => {
     const credential = { name: username, password };
+    setIsSubmitted(true);
     try {
       const { data } = await api.Login(credential);
       openSnackbar("Login successful", "success");
@@ -55,7 +57,7 @@ export default function SignIn() {
   };
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && username && password) {
       handleSubmit();
     }
   };
@@ -92,8 +94,12 @@ export default function SignIn() {
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setUsername(event.target.value);
               }}
-              error={username.length === 0}
-              helperText={username.length === 0 ? "Username is required." : ""}
+              error={isSubmitted === true && username.length === 0}
+              helperText={
+                isSubmitted === true && username.length === 0
+                  ? "Username is required."
+                  : ""
+              }
               onKeyDown={handleKeyPress}
             />
             <TextField
@@ -109,8 +115,12 @@ export default function SignIn() {
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setPassword(event.target.value);
               }}
-              error={password.length === 0}
-              helperText={password.length === 0 ? "Password is required." : ""}
+              error={isSubmitted === true && password.length === 0}
+              helperText={
+                isSubmitted === true && password.length === 0
+                  ? "Password is required."
+                  : ""
+              }
               onKeyDown={handleKeyPress}
             />
             <Button
