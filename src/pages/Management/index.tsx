@@ -56,14 +56,14 @@ const userColumns: GridColDef[] = [
     flex: 1,
     renderCell: (params) => {
       const { value } = params;
-      let className = '';
+      let className = "";
 
-      if (value === 'ADMIN') {
-        className = 'admin-label';
-      } else if (value === 'LEAD') {
-        className = 'lead-label';
-      } else if (value === 'USER') {
-        className = 'user-label';
+      if (value === "ADMIN") {
+        className = "admin-label";
+      } else if (value === "LEAD") {
+        className = "lead-label";
+      } else if (value === "USER") {
+        className = "user-label";
       }
 
       return <div className={className}>{value}</div>;
@@ -72,11 +72,11 @@ const userColumns: GridColDef[] = [
 ];
 
 type User = {
-  id: number,
-  name: string,
-  team_name: string,
-  role: string
-}
+  id: number;
+  name: string;
+  team_name: string;
+  role: string;
+};
 
 const Management: React.FC = () => {
   const [addTeamModalOpen, setAddTeamModalOpen] = useState(false);
@@ -87,48 +87,56 @@ const Management: React.FC = () => {
   const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [teams, setTeams] = useState<TeamInfo[]>([]);
-  const [originTeams, setOriginTeams] = useState<TeamInfo[]>([])
+  const [originTeams, setOriginTeams] = useState<TeamInfo[]>([]);
   const [role, setRole] = useState("");
   const [teamName, setTeamName] = useState("");
   const [team, setTeam] = useState("");
   const [userName, setUserName] = useState("");
   const [teamRowSelectionModel, setTeamRowSelectionModel] =
     useState<GridRowSelectionModel>();
-    const [userRowSelectionModel, setUserRowSelectionModel] =
+  const [userRowSelectionModel, setUserRowSelectionModel] =
     useState<GridRowSelectionModel>();
   const roles = [
-    { title: "ADMIN", style: 'admin-label' }, {title: "LEAD", style: "lead-label"}, {title:"USER", style: "user-label"}];
+    { title: "ADMIN", style: "admin-label" },
+    { title: "LEAD", style: "lead-label" },
+    { title: "USER", style: "user-label" },
+  ];
   const { openSnackbar } = useSnackbar();
 
   useEffect(() => {
     fetchUsersAndTeams();
   }, []);
-  
+
   const fetchUsersAndTeams = async () => {
     try {
       const [response1, response2] = await Promise.all([
         api.getUsers(),
         api.getTeams(),
       ]);
-      const formattedUsers =  await response1.data.map((user: {
-        id: number,
-        name: string,
-        role: string,
-        team_id: number,
-        team: {
-          name: string
-        }
-      }) => ({
-        id: user.id,
-        name: user.name,
-        role: user.role,
-        team_name: user.team ? user.team.name : 'No Team'
-      }));
+      const formattedUsers = await response1.data.map(
+        (user: {
+          id: number;
+          name: string;
+          role: string;
+          team_id: number;
+          team: {
+            name: string;
+          };
+        }) => ({
+          id: user.id,
+          name: user.name,
+          role: user.role,
+          team_name: user.team ? user.team.name : "No Team",
+        })
+      );
       setUsers(formattedUsers);
-      setTeams([{id: -1, name: "No Team"}, ...response2.data]);
-      setOriginTeams(response2.data)
+      setTeams([{ id: -1, name: "No Team" }, ...response2.data]);
+      setOriginTeams(response2.data);
     } catch (error: any) {
-      openSnackbar(error?.response?.data.error ?? "Failed to fetch users and teams.", "error");
+      openSnackbar(
+        error?.response?.data.error ?? "Failed to fetch users and teams.",
+        "error"
+      );
     }
   };
 
@@ -197,7 +205,9 @@ const Management: React.FC = () => {
   const handleTeamUpdate = async () => {
     try {
       if (!teamRowSelectionModel?.length) return;
-      await api.updateTeam(Number(teamRowSelectionModel[0]), { name: teamName });
+      await api.updateTeam(Number(teamRowSelectionModel[0]), {
+        name: teamName,
+      });
       fetchUsersAndTeams();
       openSnackbar("Team updated successfully.", "success");
     } catch (error: any) {
@@ -236,15 +246,15 @@ const Management: React.FC = () => {
   };
 
   const handleUpdateOpen = () => {
-    if(!userRowSelectionModel?.length) {
+    if (!userRowSelectionModel?.length) {
       return;
     }
-    const index = Number(userRowSelectionModel[0])
-    const selectedUser = users.find((user) => user.id === index)
-    if(!selectedUser){
+    const index = Number(userRowSelectionModel[0]);
+    const selectedUser = users.find((user) => user.id === index);
+    if (!selectedUser) {
       return;
     }
-    console.log(selectedUser.team_name)
+    console.log(selectedUser.team_name);
     setUserName(selectedUser.name);
     setRole(selectedUser.role);
     setTeam(selectedUser.team_name);
@@ -260,11 +270,11 @@ const Management: React.FC = () => {
   };
 
   const handleDeleteOpen = () => {
-    if(!userRowSelectionModel?.length) {
+    if (!userRowSelectionModel?.length) {
       return;
     }
     setDeleteUserModalOpen(true);
-  }
+  };
 
   const handleDeleteClose = () => {
     setDeleteUserModalOpen(false);
@@ -273,23 +283,37 @@ const Management: React.FC = () => {
 
   const handleAdd = async () => {
     try {
-      const selectedTeam = teams.find((item) => item.name === team)
-      if(!selectedTeam) {
-        await api.addUser({ name: userName, role, team_id: -1, password: "12345678" });
+      console.log(teams, team);
+      const selectedTeam = teams.find((item) => item.name === team);
+      if (!selectedTeam) {
+        await api.addUser({
+          name: userName,
+          role,
+          team_id: -1,
+          password: "12345678",
+        });
       } else {
-        await api.addUser({ name: userName, role, team_id: selectedTeam.id, password: "12345678" });
+        await api.addUser({
+          name: userName,
+          role,
+          team_id: selectedTeam.id,
+          password: "12345678",
+        });
       }
       fetchUsersAndTeams();
       openSnackbar("New user added successfully.", "success");
     } catch (error: any) {
-      openSnackbar(error?.response?.data.error ?? "Failed to add new user.", "error");
+      openSnackbar(
+        error?.response?.data.error ?? "Failed to add new user.",
+        "error"
+      );
     }
     handleAddClose();
   };
 
   const handleUpdate = async () => {
     try {
-      const selectedTeam = teams.find(item => item.name === team)
+      const selectedTeam = teams.find((item) => item.name === team);
       if (!userRowSelectionModel?.length || !selectedTeam) {
         return;
       }
@@ -300,7 +324,10 @@ const Management: React.FC = () => {
       fetchUsersAndTeams();
       openSnackbar("User updated successfully.", "success");
     } catch (error: any) {
-      openSnackbar(error?.response?.data.error ?? "Failed to update team.", "error");
+      openSnackbar(
+        error?.response?.data.error ?? "Failed to update team.",
+        "error"
+      );
     }
     handleUpdateClose();
   };
@@ -315,18 +342,25 @@ const Management: React.FC = () => {
       handleDeleteClose();
       openSnackbar("User deleted successfully.", "success");
     } catch (error: any) {
-      openSnackbar(error?.response?.data.error ?? "Failed to delete team.", "error");
+      openSnackbar(
+        error?.response?.data.error ?? "Failed to delete team.",
+        "error"
+      );
     }
   };
 
   return (
     <Box>
-      <Typography sx={{ marginTop: "16px", marginBottom: "10px", fontStyle: 'italic'}} variant="h4" gutterBottom>
+      <Typography
+        sx={{ marginTop: "16px", marginBottom: "10px", fontStyle: "italic" }}
+        variant="h4"
+        gutterBottom
+      >
         Team and User Management
       </Typography>
       <Grid container spacing={2} sx={{ padding: "12px" }}>
-        <Grid item xs={6}>
-          <Box sx={{ width: "100%", textAlign: "right", marginBottom: "12px" }}>
+        <Grid item xs={12} sm={6}>
+        <Box sx={{ width: "100%", textAlign: "right", marginBottom: "12px" }}>
             <Button variant="contained" onClick={handleTeamAddModalOpen}>
               + Add
             </Button>
@@ -364,44 +398,44 @@ const Management: React.FC = () => {
             />
           </Box>
         </Grid>
-        <Grid item xs={6}>
-        <Box sx={{ width: "100%", textAlign: "right", marginBottom: "12px" }}>
-        <Button variant="contained" onClick={handleAddModalOpen}>
-          + Add
-        </Button>
-        <Button
-          style={{ marginLeft: "8px" }}
-          variant="contained"
-          color="error"
-          onClick={handleDeleteOpen}
-        >
-          Delete
-        </Button>
-        <Button
-          style={{ marginLeft: "8px" }}
-          variant="contained"
-          color="secondary"
-          onClick={handleUpdateOpen}
-        >
-          Update
-        </Button>
-      </Box>
-      <Box sx={{ height: 600, width: "100%" }}>
-        <DataGrid
-          rows={users}
-          columns={userColumns}
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 50 },
-            },
-          }}
-          onRowSelectionModelChange={(newRowSelectionModel) => {
-            setUserRowSelectionModel(newRowSelectionModel);
-          }}
-          rowSelectionModel={userRowSelectionModel}
-          pageSizeOptions={[50, 10]}
-        />
-      </Box>
+        <Grid item xs={12} sm={6}>
+          <Box sx={{ width: "100%", textAlign: "right", marginBottom: "12px" }}>
+            <Button variant="contained" onClick={handleAddModalOpen}>
+              + Add
+            </Button>
+            <Button
+              style={{ marginLeft: "8px" }}
+              variant="contained"
+              color="error"
+              onClick={handleDeleteOpen}
+            >
+              Delete
+            </Button>
+            <Button
+              style={{ marginLeft: "8px" }}
+              variant="contained"
+              color="secondary"
+              onClick={handleUpdateOpen}
+            >
+              Update
+            </Button>
+          </Box>
+          <Box sx={{ height: 600, width: "100%" }}>
+            <DataGrid
+              rows={users}
+              columns={userColumns}
+              initialState={{
+                pagination: {
+                  paginationModel: { page: 0, pageSize: 50 },
+                },
+              }}
+              onRowSelectionModelChange={(newRowSelectionModel) => {
+                setUserRowSelectionModel(newRowSelectionModel);
+              }}
+              rowSelectionModel={userRowSelectionModel}
+              pageSizeOptions={[50, 10]}
+            />
+          </Box>
         </Grid>
       </Grid>
       <Modal open={addTeamModalOpen} onClose={handleTeamAddClose}>
@@ -459,7 +493,11 @@ const Management: React.FC = () => {
             Are you sure want to delete this team?
           </Typography>
           <Box sx={{ textAlign: "right", marginTop: "12px" }}>
-            <Button variant="contained" onClick={handleTeamDelete} color="error">
+            <Button
+              variant="contained"
+              onClick={handleTeamDelete}
+              color="error"
+            >
               Yes
             </Button>
             <Button
@@ -487,16 +525,12 @@ const Management: React.FC = () => {
           </FormControl>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
             <InputLabel>Role</InputLabel>
-            <Select
-              value={role}
-              label="Role"
-              onChange={handleRole}
-            >
-                            {roles.map((role, index) => {
+            <Select value={role} label="Role" onChange={handleRole}>
+              {roles.map((role, index) => {
                 return (
                   <MenuItem value={role.title} key={index}>
                     <Typography className={role.style} variant="caption">
-                    {role.title}
+                      {role.title}
                     </Typography>
                   </MenuItem>
                 );
@@ -505,15 +539,11 @@ const Management: React.FC = () => {
           </FormControl>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
             <InputLabel>Team</InputLabel>
-            <Select
-              value={team.toString()}
-              label="Role"
-              onChange={handleTeam}
-            >
+            <Select value={team.toString()} label="Role" onChange={handleTeam}>
               {teams.length > 0 &&
-                teams.map((t, index) => {
+                teams.map((t) => {
                   return (
-                    <MenuItem value={t.id} key={t.id}>
+                    <MenuItem value={t.name} key={t.id}>
                       {t.name}
                     </MenuItem>
                   );
@@ -542,16 +572,12 @@ const Management: React.FC = () => {
           </FormControl>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
             <InputLabel>Role</InputLabel>
-            <Select
-              value={role}
-              label="Role"
-              onChange={handleRole}
-            >
+            <Select value={role} label="Role" onChange={handleRole}>
               {roles.map((role, index) => {
                 return (
                   <MenuItem value={role.title} key={index}>
                     <Typography className={role.style} variant="caption">
-                    {role.title}
+                      {role.title}
                     </Typography>
                   </MenuItem>
                 );
@@ -560,11 +586,7 @@ const Management: React.FC = () => {
           </FormControl>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
             <InputLabel>Team</InputLabel>
-            <Select
-              value={team.toString()}
-              label="Role"
-              onChange={handleTeam}
-            >
+            <Select value={team.toString()} label="Role" onChange={handleTeam}>
               {teams.length > 0 &&
                 teams.map((t) => {
                   return (
