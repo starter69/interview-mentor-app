@@ -565,9 +565,9 @@ const Management: React.FC = () => {
             <InputLabel>Team</InputLabel>
             <Select value={team.toString()} label='Role' onChange={handleTeam}>
               {teams.length > 0 &&
-                teams.map((t, index) => {
+                teams.map((t) => {
                   return (
-                    <MenuItem value={t.id} key={t.id}>
+                    <MenuItem value={t.name} key={t.id}>
                       {t.name}
                     </MenuItem>
                   );
