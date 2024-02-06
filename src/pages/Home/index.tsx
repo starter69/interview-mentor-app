@@ -16,6 +16,8 @@ import { useSnackbar } from "providers/SnackbarProvider";
 import { InterviewDetailType } from "api/types";
 import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
+import IconButton from "@mui/material/IconButton";
+import SearchIcon from "@mui/icons-material/Search";
 
 import "../../index.css";
 
@@ -38,6 +40,7 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [interviews, setInterviews] = useState<InterviewDetailType[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const navigator = useNavigate();
 
   const fetchInterviews = async () => {
@@ -101,6 +104,21 @@ const Home = () => {
     handleCloseDialog();
   };
 
+  const handleSearchButtonClick = async () => {
+    try {
+      const filteredInterviews = await api.searchInterview(searchQuery);
+      setInterviews(filteredInterviews.data);
+    } catch (error: any) {
+      openSnackbar("Failed to fetch interview information", "error");
+    }
+  };
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSearchButtonClick();
+    }
+  };
+
   return (
     <Box>
       <Button
@@ -111,6 +129,24 @@ const Home = () => {
       >
         Upload
       </Button>
+      <Box sx={{ display: "flex", justifyContent: "right" }}>
+        <TextField
+          id="search-bar"
+          className="text"
+          value={searchQuery}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            setSearchQuery(event.target.value);
+          }}
+          label="Search"
+          variant="outlined"
+          placeholder="Search..."
+          size="small"
+          onKeyDown={handleKeyPress}
+        />
+        <IconButton aria-label="search" onClick={handleSearchButtonClick}>
+          <SearchIcon style={{ fill: "blue" }} />
+        </IconButton>
+      </Box>
       <Grid
         container
         spacing={2}

@@ -1,5 +1,6 @@
 import axios from "axios";
 import {
+  UpdateInterviewRequest,
   UpdatePaswordRequest,
   UserLoginRequest,
   UserRegisterRequest,
@@ -91,7 +92,11 @@ const getMyInterviews = (userId: number) =>
 
 const deleteInterview = (id: number) => apiService.delete(`interviews/${id}`);
 
-// const updateInterview = (id: number)
+const updateInterview = (id: number, payload: UpdateInterviewRequest) =>
+  apiService.patch(`interviews/${id}`, payload);
+
+const searchInterview = (query: string) =>
+  apiService.get(`interviews/search?query=${query}`);
 
 export {
   Login,
@@ -113,4 +118,6 @@ export {
   getInterviews,
   getMyInterviews,
   deleteInterview,
+  updateInterview,
+  searchInterview,
 };

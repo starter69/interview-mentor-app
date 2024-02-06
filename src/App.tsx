@@ -17,8 +17,8 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <BrowserRouter>
-        <ProfileProvider>
-          <SnackbarProvider>
+        <SnackbarProvider>
+          <ProfileProvider>
             <>
               <header>
                 <ResponsiveAppBar />
@@ -29,8 +29,8 @@ const App: React.FC = () => {
                 </Container>
               </main>
             </>
-          </SnackbarProvider>
-        </ProfileProvider>
+          </ProfileProvider>
+        </SnackbarProvider>
       </BrowserRouter>
     </div>
   );

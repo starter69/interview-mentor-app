@@ -18,6 +18,9 @@ import { useSnackbar } from "providers/SnackbarProvider";
 import { TeamInfo } from "api/types";
 
 import "../../index.css";
+import { InterviewDetailType } from "api/types";
+import { convertDateFormat } from "utils/convertDateFormat";
+import { convertSecondsToHMS } from "utils/convertSecondToHMS";
 
 const teamStyle = {
   position: "absolute" as "absolute",
@@ -82,6 +85,51 @@ const userColumns: GridColDef[] = [
   },
 ];
 
+const interviewStyle = {
+  position: "absolute" as "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 650,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
+};
+
+const interviewColumns: GridColDef[] = [
+  {
+    field: "id",
+    headerName: "",
+    width: 50,
+    renderCell: (params) => <span>#</span>,
+  },
+  { field: "name", headerName: "Company Name", flex: 1 },
+  {
+    field: "user_name",
+    headerName: "User Name",
+    flex: 1,
+    renderCell: (params) => {
+      return <span>{params.row.user.name}</span>;
+    },
+  },
+  {
+    field: "duration",
+    headerName: "Duration",
+    flex: 1,
+    renderCell: (params) => {
+      return <span>{convertSecondsToHMS(params.value)}</span>;
+    },
+  },
+  {
+    field: "date",
+    headerName: "Recorded Date",
+    flex: 1,
+    renderCell: (params) => {
+      return <span>{convertDateFormat(params.value)}</span>;
+    },
+  },
+];
+
 type User = {
   id: number;
   name: string;
@@ -96,9 +144,15 @@ const Management: React.FC = () => {
   const [addUserModalOpen, setAddUserModalOpen] = useState(false);
   const [updateUserModalOpen, setUpdateUserModalOpen] = useState(false);
   const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
+  const [updateInterviewModalOpen, setUpdateInterviewModalOpen] =
+    useState(false);
+  const [deleteInterviewModalOpen, setDeleteInterviewModalOpen] =
+    useState(false);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [teams, setTeams] = useState<TeamInfo[]>([]);
+  const [interviews, setInterviews] = useState<InterviewDetailType[]>([]);
+  const [companyName, setCompanyName] = useState("");
   const [originTeams, setOriginTeams] = useState<TeamInfo[]>([]);
   const [role, setRole] = useState("USER");
   const [teamName, setTeamName] = useState("");
@@ -109,6 +163,8 @@ const Management: React.FC = () => {
     useState<GridRowSelectionModel>();
   const [userRowSelectionModel, setUserRowSelectionModel] =
     useState<GridRowSelectionModel>();
+  const [interviewRowSelectionModel, setInterviewRowSelectionModel] =
+    useState<GridRowSelectionModel>();
   const roles = [
     { title: "ADMIN", style: "admin-label" },
     { title: "LEAD", style: "lead-label" },
@@ -117,14 +173,15 @@ const Management: React.FC = () => {
   const { openSnackbar } = useSnackbar();
 
   useEffect(() => {
-    fetchUsersAndTeams();
+    fetchData();
   }, []);
 
-  const fetchUsersAndTeams = async () => {
+  const fetchData = async () => {
     try {
-      const [response1, response2] = await Promise.all([
+      const [response1, response2, response3] = await Promise.all([
         api.getUsers(),
         api.getTeams(),
+        api.getInterviews(),
       ]);
       const formattedUsers = await response1.data.map(
         (user: {
@@ -144,10 +201,12 @@ const Management: React.FC = () => {
       );
       setUsers(formattedUsers);
       setTeams([{ id: -1, name: "No Team" }, ...response2.data]);
+      setInterviews(response3.data);
       setOriginTeams(response2.data);
     } catch (error: any) {
       openSnackbar(
-        error?.response?.data.error ?? "Failed to fetch users and teams.",
+        error?.response?.data.error ??
+          "Failed to fetch users and teams, interviews.",
         "error"
       );
     }
@@ -161,6 +220,7 @@ const Management: React.FC = () => {
     setTeam(event.target.value);
   };
 
+  // Teams
   const handleTeamAddModalOpen = () => {
     setAddTeamModalOpen(true);
   };
@@ -208,7 +268,7 @@ const Management: React.FC = () => {
     if (!teamName) return;
     try {
       await api.addTeam({ name: teamName });
-      fetchUsersAndTeams();
+      fetchData();
       openSnackbar("New team added successfully.", "success");
     } catch (error: any) {
       openSnackbar(
@@ -230,7 +290,7 @@ const Management: React.FC = () => {
       await api.updateTeam(Number(teamRowSelectionModel[0]), {
         name: teamName,
       });
-      fetchUsersAndTeams();
+      fetchData();
       openSnackbar("Team updated successfully.", "success");
     } catch (error: any) {
       openSnackbar(
@@ -248,7 +308,7 @@ const Management: React.FC = () => {
         return;
       }
       await api.deleteTeam(Number(teamRowSelectionModel[0]));
-      fetchUsersAndTeams();
+      fetchData();
       handleTeamDeleteClose();
       openSnackbar("Team deleted successfully.", "success");
     } catch (error: any) {
@@ -258,6 +318,8 @@ const Management: React.FC = () => {
       );
     }
   };
+
+  // Users
 
   const handleAddModalOpen = () => {
     setAddUserModalOpen(true);
@@ -270,7 +332,7 @@ const Management: React.FC = () => {
 
   const handleUpdateOpen = () => {
     if (!userRowSelectionModel?.length) {
-      openSnackbar("Please selct a user first.", "error");
+      openSnackbar("Please select a user first.", "error");
       return;
     }
     const index = Number(userRowSelectionModel[0]);
@@ -292,7 +354,7 @@ const Management: React.FC = () => {
 
   const handleDeleteOpen = () => {
     if (!userRowSelectionModel?.length) {
-      openSnackbar("Please selct a user first.", "error");
+      openSnackbar("Please select a user first.", "error");
       return;
     }
     setDeleteUserModalOpen(true);
@@ -327,7 +389,7 @@ const Management: React.FC = () => {
           password: "12345678",
         });
       }
-      fetchUsersAndTeams();
+      fetchData();
       openSnackbar("New user added successfully.", "success");
     } catch (error: any) {
       openSnackbar(
@@ -350,7 +412,7 @@ const Management: React.FC = () => {
         Number(userRowSelectionModel[userRowSelectionModel.length - 1]),
         { name: userName, role, team_id: selectedTeam.id, password: "12345678" }
       );
-      fetchUsersAndTeams();
+      fetchData();
       openSnackbar("User updated successfully.", "success");
     } catch (error: any) {
       openSnackbar(
@@ -367,7 +429,7 @@ const Management: React.FC = () => {
       await api.deleteUser(
         Number(userRowSelectionModel[userRowSelectionModel.length - 1])
       );
-      fetchUsersAndTeams();
+      fetchData();
       handleDeleteClose();
       openSnackbar("User deleted successfully.", "success");
     } catch (error: any) {
@@ -378,11 +440,91 @@ const Management: React.FC = () => {
     }
   };
 
+  // Interviews
+  const handleInterviewUpdateOpen = () => {
+    if (!interviewRowSelectionModel?.length) {
+      openSnackbar("Please select an interview first.", "error");
+      return;
+    }
+    const index = Number(interviewRowSelectionModel[0]);
+    const selectedInterview = interviews.find(
+      (interview) => interview.id === index
+    );
+    if (!selectedInterview) {
+      return;
+    }
+    setCompanyName(selectedInterview.name);
+    setUpdateInterviewModalOpen(true);
+  };
+
+  const handleInterviewUpdateClose = () => {
+    setUpdateInterviewModalOpen(false);
+    setInterviewRowSelectionModel([]);
+    init();
+  };
+
+  const handleInterviewDeleteOpen = () => {
+    if (!interviewRowSelectionModel?.length) {
+      openSnackbar("Please select an interview first.", "error");
+      return;
+    }
+    setDeleteInterviewModalOpen(true);
+  };
+
+  const handleInterviewDeleteClose = () => {
+    setDeleteInterviewModalOpen(false);
+    setInterviewRowSelectionModel([]);
+  };
+
+  const handleInterviewUpdate = async () => {
+    setIsSubmitted(true);
+    if (!companyName || !interviewRowSelectionModel?.length) return;
+    try {
+      const selectedInterview = interviews.find(
+        (item) => item.id === Number(interviewRowSelectionModel[0])
+      );
+      if (!interviewRowSelectionModel?.length || !selectedInterview) {
+        return;
+      }
+      await api.updateInterview(Number(interviewRowSelectionModel[0]), {
+        company_name: companyName,
+      });
+      fetchData();
+      openSnackbar("Interview updated successfully.", "success");
+    } catch (error: any) {
+      openSnackbar(
+        error?.response?.data.error ?? "Failed to update interview.",
+        "error"
+      );
+    }
+    handleInterviewUpdateClose();
+  };
+
+  const handleInterviewDelete = async () => {
+    try {
+      if (!interviewRowSelectionModel?.length) return;
+      await api.deleteInterview(
+        Number(
+          interviewRowSelectionModel[interviewRowSelectionModel.length - 1]
+        )
+      );
+      fetchData();
+      handleInterviewDeleteClose();
+      openSnackbar("Interview deleted successfully.", "success");
+    } catch (error: any) {
+      openSnackbar(
+        error?.response?.data.error ?? "Failed to delete interview.",
+        "error"
+      );
+    }
+  };
+
   function init() {
     setUserName("");
     setRole("USER");
     setTeam("No Team");
     setTeamName("");
+    setCompanyName("");
     setIsSubmitted(false);
   }
 
@@ -396,7 +538,7 @@ const Management: React.FC = () => {
         Team and User Management
       </Typography>
       <Grid container spacing={2} sx={{ padding: "12px" }}>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={4}>
           <Box sx={{ width: "100%", textAlign: "right", marginBottom: "12px" }}>
             <Button variant="contained" onClick={handleTeamAddModalOpen}>
               + Add
@@ -438,7 +580,7 @@ const Management: React.FC = () => {
             />
           </Box>
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={4}>
           <Box sx={{ width: "100%", textAlign: "right", marginBottom: "12px" }}>
             <Button variant="contained" onClick={handleAddModalOpen}>
               + Add
@@ -473,6 +615,45 @@ const Management: React.FC = () => {
                 setUserRowSelectionModel(newRowSelectionModel);
               }}
               rowSelectionModel={userRowSelectionModel}
+              pageSizeOptions={[50, 10]}
+            />
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <Box sx={{ width: "100%", textAlign: "right", marginBottom: "12px" }}>
+            <Button
+              style={{ marginLeft: "8px" }}
+              variant="contained"
+              color="error"
+              onClick={handleInterviewDeleteOpen}
+            >
+              Delete
+            </Button>
+            <Button
+              style={{ marginLeft: "8px" }}
+              variant="contained"
+              color="secondary"
+              onClick={handleInterviewUpdateOpen}
+            >
+              Update
+            </Button>
+          </Box>
+          <Box sx={{ height: 600, width: "100%" }}>
+            <DataGrid
+              rows={interviews.map((item, index) => ({
+                ...item,
+                id: index + 1,
+              }))}
+              columns={interviewColumns}
+              initialState={{
+                pagination: {
+                  paginationModel: { page: 0, pageSize: 50 },
+                },
+              }}
+              onRowSelectionModelChange={(newRowSelectionModel) => {
+                setInterviewRowSelectionModel(newRowSelectionModel);
+              }}
+              rowSelectionModel={interviewRowSelectionModel}
               pageSizeOptions={[50, 10]}
             />
           </Box>
@@ -700,6 +881,63 @@ const Management: React.FC = () => {
               color="error"
             >
               Okay
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+      <Modal
+        open={updateInterviewModalOpen}
+        onClose={handleInterviewUpdateClose}
+      >
+        <Box sx={interviewStyle}>
+          <Typography variant="h6" component="h2">
+            Update Existing Interview
+          </Typography>
+          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+            <TextField
+              required
+              label="Name"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              size="small"
+              error={isSubmitted === true && companyName.length === 0}
+              helperText={
+                isSubmitted === true && companyName.length === 0
+                  ? "Company name is required."
+                  : ""
+              }
+            />
+          </FormControl>
+
+          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+            <Button variant="contained" onClick={handleInterviewUpdate}>
+              Update
+            </Button>
+          </FormControl>
+        </Box>
+      </Modal>
+      <Modal
+        open={deleteInterviewModalOpen}
+        onClose={handleInterviewDeleteClose}
+      >
+        <Box sx={interviewStyle}>
+          <Typography variant="h6" component="h2">
+            Are you sure want to delete this interview?
+          </Typography>
+          <Box sx={{ textAlign: "right" }}>
+            <Button
+              variant="contained"
+              onClick={handleInterviewDelete}
+              color="error"
+            >
+              Yes
+            </Button>
+            <Button
+              style={{ marginLeft: "12px" }}
+              variant="contained"
+              onClick={handleInterviewDeleteClose}
+            >
+              No
             </Button>
           </Box>
         </Box>
