@@ -88,10 +88,11 @@ const Management: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [teams, setTeams] = useState<TeamInfo[]>([]);
   const [originTeams, setOriginTeams] = useState<TeamInfo[]>([]);
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState("USER");
   const [teamName, setTeamName] = useState("");
-  const [team, setTeam] = useState("");
+  const [team, setTeam] = useState("No Team");
   const [userName, setUserName] = useState("");
+  const [isSubmitClicked, setIsSubmitClicked] = useState(false)
   const [teamRowSelectionModel, setTeamRowSelectionModel] =
     useState<GridRowSelectionModel>();
   const [userRowSelectionModel, setUserRowSelectionModel] =
@@ -154,11 +155,15 @@ const Management: React.FC = () => {
 
   const handleTeamAddClose = () => {
     setAddTeamModalOpen(false);
-    setTeamName("");
+    init()
   };
 
   const handleTeamUpdateOpen = () => {
     if (!teamRowSelectionModel?.length) {
+      openSnackbar(
+        "Please select a team first.",
+        "error"
+      );
       return;
     }
     const index = Number(teamRowSelectionModel[0]);
@@ -173,11 +178,15 @@ const Management: React.FC = () => {
   const handleTeamUpdateClose = () => {
     setUpdateTeamModalOpen(false);
     setTeamRowSelectionModel([]);
-    setTeamName("");
+    init()
   };
 
   const handleTeamDeleteOpen = () => {
     if (!teamRowSelectionModel?.length) {
+      openSnackbar(
+        "Please select a team first.",
+        "error"
+      );
       return;
     }
     setDeleteTeamModalOpen(true);
@@ -189,6 +198,8 @@ const Management: React.FC = () => {
   };
 
   const handleTeamAdd = async () => {
+    setIsSubmitClicked(true)
+    if(!teamName) return;
     try {
       await api.addTeam({ name: teamName });
       fetchUsersAndTeams();
@@ -203,6 +214,8 @@ const Management: React.FC = () => {
   };
 
   const handleTeamUpdate = async () => {
+    setIsSubmitClicked(true)
+    if(!teamName) return;
     try {
       if (!teamRowSelectionModel?.length) return;
       await api.updateTeam(Number(teamRowSelectionModel[0]), {
@@ -240,13 +253,15 @@ const Management: React.FC = () => {
 
   const handleAddClose = () => {
     setAddUserModalOpen(false);
-    setUserName("");
-    setRole("");
-    setTeam("");
+    init()
   };
 
   const handleUpdateOpen = () => {
     if (!userRowSelectionModel?.length) {
+      openSnackbar(
+        "Please selct a user first.",
+        "error"
+      );
       return;
     }
     const index = Number(userRowSelectionModel[0]);
@@ -254,7 +269,6 @@ const Management: React.FC = () => {
     if (!selectedUser) {
       return;
     }
-    console.log(selectedUser.team_name);
     setUserName(selectedUser.name);
     setRole(selectedUser.role);
     setTeam(selectedUser.team_name);
@@ -264,13 +278,15 @@ const Management: React.FC = () => {
   const handleUpdateClose = () => {
     setUpdateUserModalOpen(false);
     setUserRowSelectionModel([]);
-    setUserName("");
-    setRole("");
-    setTeam("");
+    init()
   };
 
   const handleDeleteOpen = () => {
     if (!userRowSelectionModel?.length) {
+      openSnackbar(
+        "Please selct a user first.",
+        "error"
+      );
       return;
     }
     setDeleteUserModalOpen(true);
@@ -282,6 +298,8 @@ const Management: React.FC = () => {
   };
 
   const handleAdd = async () => {
+    setIsSubmitClicked(true)
+    if(!userName || !role || !team) return;
     try {
       console.log(teams, team);
       const selectedTeam = teams.find((item) => item.name === team);
@@ -312,6 +330,8 @@ const Management: React.FC = () => {
   };
 
   const handleUpdate = async () => {
+    setIsSubmitClicked(true)
+    if(!userName || !role || !team) return;
     try {
       const selectedTeam = teams.find((item) => item.name === team);
       if (!userRowSelectionModel?.length || !selectedTeam) {
@@ -349,6 +369,14 @@ const Management: React.FC = () => {
     }
   };
 
+  function init() {
+    setUserName("");
+    setRole("USER");
+    setTeam("No Team");
+    setTeamName("");
+    setIsSubmitClicked(false)
+  }
+
   return (
     <Box>
       <Typography
@@ -383,7 +411,7 @@ const Management: React.FC = () => {
           </Box>
           <Box sx={{ height: 600, width: "100%" }}>
             <DataGrid
-              rows={originTeams}
+             rows={originTeams.map((item, index) => ({ ...item, id: index + 1 }))}
               columns={teamColumns}
               initialState={{
                 pagination: {
@@ -422,7 +450,7 @@ const Management: React.FC = () => {
           </Box>
           <Box sx={{ height: 600, width: "100%" }}>
             <DataGrid
-              rows={users}
+              rows={users.map((item, index) => ({...item, id: index+1}))}
               columns={userColumns}
               initialState={{
                 pagination: {
@@ -445,10 +473,17 @@ const Management: React.FC = () => {
           </Typography>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
             <TextField
-              label="Name"
+              required
+              label='Name'
               value={teamName}
               onChange={(e) => setTeamName(e.target.value)}
-              size="small"
+              size='small'
+              error={teamName.length === 0 && isSubmitClicked}
+              helperText={
+                isSubmitClicked && teamName.length === 0
+                  ? "Team name is required."
+                  : ""
+              }
             />
           </FormControl>
           <FormControl
@@ -471,10 +506,17 @@ const Management: React.FC = () => {
             size="small"
           >
             <TextField
-              label="Name"
+              required
+              label='Name'
               value={teamName}
               onChange={(e) => setTeamName(e.target.value)}
-              size="small"
+              size='small'
+              error={teamName.length === 0 && isSubmitClicked}
+              helperText={
+                isSubmitClicked && teamName.length === 0
+                  ? "Team name is required."
+                  : ""
+              }
             />
           </FormControl>
           <FormControl
@@ -517,10 +559,17 @@ const Management: React.FC = () => {
           </Typography>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
             <TextField
-              label="Name"
+              required
+              label='Name'
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
-              size="small"
+              size='small'
+              error={userName.length === 0 && isSubmitClicked}
+              helperText={
+                isSubmitClicked && userName.length === 0
+                  ? "Username is required."
+                  : ""
+              }
             />
           </FormControl>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
@@ -564,10 +613,17 @@ const Management: React.FC = () => {
           </Typography>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
             <TextField
-              label="Name"
+              required
+              label='Name'
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
-              size="small"
+              size='small'
+              error={userName.length === 0}
+              helperText={
+                userName.length === 0
+                  ? "Username is required."
+                  : ""
+              }
             />
           </FormControl>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
