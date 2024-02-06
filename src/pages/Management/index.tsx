@@ -31,7 +31,7 @@ const teamStyle = {
 };
 
 const teamColumns: GridColDef[] = [
-  { field: "id", headerName: "ID", flex: 1 },
+  { field: "index", headerName: "ID", flex: 1 },
   { field: "name", headerName: "Team Name", flex: 1 },
 ];
 
@@ -50,7 +50,7 @@ const userStyle = {
 };
 
 const userColumns: GridColDef[] = [
-  { field: "id", headerName: "ID", flex: 1 },
+  { field: "index", headerName: "ID", flex: 1 },
   { field: "name", headerName: "User Name", flex: 1 },
   { field: "team_name", headerName: "Team Name", flex: 1 },
   {
@@ -342,7 +342,7 @@ const Management: React.FC = () => {
       }
       await api.updateUser(
         Number(userRowSelectionModel[userRowSelectionModel.length - 1]),
-        { name: userName, role, team_id: selectedTeam.id, password: "12345678" }
+        { name: userName, role, team_id: selectedTeam.id }
       );
       fetchUsersAndTeams();
       openSnackbar("User updated successfully.", "success");
@@ -414,7 +414,7 @@ const Management: React.FC = () => {
           </Box>
           <Box sx={{ height: 600, width: "100%" }}>
             <DataGrid
-             rows={originTeams.map((item, index) => ({ ...item, id: index + 1 }))}
+             rows={originTeams.map((item, index) => ({ index: index+1, ...item}))}
               columns={teamColumns}
               initialState={{
                 pagination: {
@@ -453,7 +453,7 @@ const Management: React.FC = () => {
           </Box>
           <Box sx={{ height: 600, width: "100%" }}>
             <DataGrid
-              rows={users.map((item, index) => ({...item, id: index+1}))}
+              rows={users.map((item, index) => ({index: index+1, ...item}))}
               columns={userColumns}
               initialState={{
                 pagination: {

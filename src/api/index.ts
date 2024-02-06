@@ -50,7 +50,6 @@ const updateUser = (
     name: string;
     role: string;
     team_id: number;
-    password: string;
   }
 ) => apiService.patch(`users/${id}`, payload);
 const getUser = (id: number) => apiService.get(`users/${id}`);
