@@ -40,10 +40,13 @@ const userStyle = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 650,
+  width: "45%", // Set a relative width using percentage
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
+  "@media (max-width: 600px)": {
+    width: "90%",
+  },
 };
 
 const userColumns: GridColDef[] = [
