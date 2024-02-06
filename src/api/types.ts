@@ -38,3 +38,7 @@ export type UpdatePaswordRequest = {
   old_password: string;
   new_password: string;
 };
+
+export type ResetPaswordRequest = {
+  user_id: number;
+};

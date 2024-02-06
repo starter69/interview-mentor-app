@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 
+import VideoThumbnail from "react-video-thumbnail";
 import playBtn from "assets/play-btn.png";
 import * as api from "api";
 import {
@@ -16,6 +17,7 @@ import { useSnackbar } from "providers/SnackbarProvider";
 import { InterviewDetailType } from "api/types";
 import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
+import { relative } from "path";
 
 import "../../index.css";
 
@@ -113,15 +115,22 @@ const Home = () => {
       <Button variant="contained" color="primary" onClick={handleOpenDialog}>
         Upload
       </Button>
-      <Grid container spacing={2} sx={{ padding: "12px" }} columns={{ xs: 4, sm: 8, md: 12 }}>
+
+      <Grid
+        container
+        spacing={2}
+        sx={{ padding: "12px" }}
+        columns={{ xs: 4, sm: 8, md: 12 }}
+      >
         {interviews.map((interview, index) => {
           return (
-            <Grid item xs={2} key={index}>
+            <Grid item xs={2} key={index} sx={{position: 'relative'}}>
               <Box
                 className="interview-component"
                 onClick={() => {
                   navigator(`/interviews/${interview.id}/detail`);
                 }}
+                sx= {{ position: 'relative' }}
               >
                 <Typography style={{ color: "white" }}>
                   {interview.name} - {interview.user_id}
@@ -136,6 +145,19 @@ const Home = () => {
                   src={playBtn}
                 />
               </Box>
+              <VideoThumbnail
+                videoUrl={`http://${api.host}:${api.port}/` + interview?.path}
+                thumbnailHandler={(thumbnail: any) => console.log(thumbnail)}
+                width={200}
+                height={100}
+                className="interview-component"
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              />
             </Grid>
           );
         })}

@@ -55,6 +55,7 @@ const updateUser = (
 const getUser = (id: number) => apiService.get(`users/${id}`);
 const updatePassword = (payload: UpdatePaswordRequest) =>
   apiService.put("users/update-password", payload);
+const resetPassword = (id: number) => apiService.get(`users/${id}/reset-password`)
 // Teams
 
 const getTeams = () => apiService.get("teams");
@@ -90,8 +91,6 @@ const getMyInterviews = (userId: number) =>
 
 const deleteInterview = (id: number) => apiService.delete(`interviews/${id}`);
 
-// const updateInterview = (id: number)
-
 export {
   Login,
   Register,
@@ -107,6 +106,7 @@ export {
   updateUser,
   getUser,
   updatePassword,
+  resetPassword,
   uploadInterview,
   getInterviewDetail,
   getInterviews,

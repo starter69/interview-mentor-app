@@ -88,6 +88,7 @@ const Management: React.FC = () => {
   const [addUserModalOpen, setAddUserModalOpen] = useState(false);
   const [updateUserModalOpen, setUpdateUserModalOpen] = useState(false);
   const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
+  const [resetUserModalOpen, setResetUserModalOpen] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [teams, setTeams] = useState<TeamInfo[]>([]);
   const [originTeams, setOriginTeams] = useState<TeamInfo[]>([]);
@@ -300,6 +301,23 @@ const Management: React.FC = () => {
     setUserRowSelectionModel([]);
   };
 
+  const handleResetOpen = () => {
+    if (!userRowSelectionModel?.length) {
+      openSnackbar(
+        "Please selct a user first.",
+        "error"
+      );
+      return;
+    }
+    setResetUserModalOpen(true);
+  }
+
+  
+  const handleResetClose = () => {
+    setResetUserModalOpen(false);
+    setUserRowSelectionModel([]);
+  };
+
   const handleAdd = async () => {
     setIsSubmitClicked(true)
     if(!userName || !role || !team) return;
@@ -348,7 +366,7 @@ const Management: React.FC = () => {
       openSnackbar("User updated successfully.", "success");
     } catch (error: any) {
       openSnackbar(
-        error?.response?.data.error ?? "Failed to update team.",
+        error?.response?.data.error ?? "Failed to update user.",
         "error"
       );
     }
@@ -366,7 +384,25 @@ const Management: React.FC = () => {
       openSnackbar("User deleted successfully.", "success");
     } catch (error: any) {
       openSnackbar(
-        error?.response?.data.error ?? "Failed to delete team.",
+        error?.response?.data.error ?? "Failed to delete user.",
+        "error"
+      );
+    }
+  };
+
+  const handleReset = async () => {
+    try {
+      const selectedTeam = teams.find((item) => item.name === team);
+      if (!userRowSelectionModel?.length || !selectedTeam) {
+        return;
+      }
+      await api.resetPassword(Number(userRowSelectionModel[0]));
+      fetchUsersAndTeams();
+      handleResetClose();
+      openSnackbar("User reseted successfully.", "success");
+    } catch (error: any) {
+      openSnackbar(
+        error?.response?.data.error ?? "Failed to reset password.",
         "error"
       );
     }
@@ -449,6 +485,14 @@ const Management: React.FC = () => {
               onClick={handleUpdateOpen}
             >
               Update
+            </Button>
+            <Button
+              style={{ marginLeft: "8px" }}
+              variant="contained"
+              color="inherit"
+              onClick={handleResetOpen}
+            >
+              Reset
             </Button>
           </Box>
           <Box sx={{ height: 600, width: "100%" }}>
@@ -676,6 +720,25 @@ const Management: React.FC = () => {
               style={{ marginLeft: "12px" }}
               variant="contained"
               onClick={handleDeleteClose}
+            >
+              No
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+      <Modal open={resetUserModalOpen} onClose={handleResetClose}>
+        <Box sx={userStyle}>
+          <Typography variant="h6" component="h2">
+            Are you sure want to reset password of this user?
+          </Typography>
+          <Box sx={{ textAlign: "right" }}>
+            <Button variant="contained" onClick={handleReset} color="error">
+              Yes
+            </Button>
+            <Button
+              style={{ marginLeft: "12px" }}
+              variant="contained"
+              onClick={handleResetClose}
             >
               No
             </Button>

@@ -18,6 +18,7 @@ code {
   height: 100px;
   background-color: darkgray;
   transition: background-color 0.3s ease;
+  position: relative;
 }
 
 .interview-component:hover {
