@@ -1,9 +1,10 @@
+import React, { useEffect, useState } from "react";
+
 import { Box, Container, Typography } from "@mui/material";
 import BusinessIcon from "@mui/icons-material/Business";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import PunchClockIcon from "@mui/icons-material/PunchClock";
 import EventNoteIcon from "@mui/icons-material/EventNote";
-import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ReactPlayer from "react-player";
 import * as api from "api";
@@ -25,9 +26,7 @@ const InterviewDetail: React.FC = () => {
       try {
         const response = await api.getInterviewDetail(Number(id));
         setInterviewDetail(response.data);
-
-        const user = await api.getUser(response.data.user_id);
-        setUsername(user.data?.name);
+        setUsername(response.data.user.name);
 
         setDuration(convertSecondsToHMS(response.data.duration));
 

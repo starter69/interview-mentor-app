@@ -31,7 +31,13 @@ const teamStyle = {
 };
 
 const teamColumns: GridColDef[] = [
-  { field: "id", headerName: "ID", flex: 1 },
+  {
+    field: "id",
+    headerName: "",
+    width: 50,
+    renderCell: (params) => <span>#</span>,
+    flex: 1,
+  },
   { field: "name", headerName: "Team Name", flex: 1 },
 ];
 
@@ -47,7 +53,12 @@ const userStyle = {
 };
 
 const userColumns: GridColDef[] = [
-  { field: "id", headerName: "ID", flex: 1 },
+  {
+    field: "id",
+    headerName: "",
+    width: 50,
+    renderCell: (params) => <span>#</span>,
+  },
   { field: "name", headerName: "User Name", flex: 1 },
   { field: "team_name", headerName: "Team Name", flex: 1 },
   {
@@ -85,13 +96,15 @@ const Management: React.FC = () => {
   const [addUserModalOpen, setAddUserModalOpen] = useState(false);
   const [updateUserModalOpen, setUpdateUserModalOpen] = useState(false);
   const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [teams, setTeams] = useState<TeamInfo[]>([]);
   const [originTeams, setOriginTeams] = useState<TeamInfo[]>([]);
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState("USER");
   const [teamName, setTeamName] = useState("");
-  const [team, setTeam] = useState("");
+  const [team, setTeam] = useState("No Team");
   const [userName, setUserName] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [teamRowSelectionModel, setTeamRowSelectionModel] =
     useState<GridRowSelectionModel>();
   const [userRowSelectionModel, setUserRowSelectionModel] =
@@ -154,11 +167,12 @@ const Management: React.FC = () => {
 
   const handleTeamAddClose = () => {
     setAddTeamModalOpen(false);
-    setTeamName("");
+    init();
   };
 
   const handleTeamUpdateOpen = () => {
     if (!teamRowSelectionModel?.length) {
+      openSnackbar("Please select a team first.", "error");
       return;
     }
     const index = Number(teamRowSelectionModel[0]);
@@ -173,11 +187,12 @@ const Management: React.FC = () => {
   const handleTeamUpdateClose = () => {
     setUpdateTeamModalOpen(false);
     setTeamRowSelectionModel([]);
-    setTeamName("");
+    init();
   };
 
   const handleTeamDeleteOpen = () => {
     if (!teamRowSelectionModel?.length) {
+      openSnackbar("Please select a team first.", "error");
       return;
     }
     setDeleteTeamModalOpen(true);
@@ -189,6 +204,8 @@ const Management: React.FC = () => {
   };
 
   const handleTeamAdd = async () => {
+    setIsSubmitted(true);
+    if (!teamName) return;
     try {
       await api.addTeam({ name: teamName });
       fetchUsersAndTeams();
@@ -203,8 +220,13 @@ const Management: React.FC = () => {
   };
 
   const handleTeamUpdate = async () => {
+    setIsSubmitted(true);
+    if (!teamName) return;
     try {
-      if (!teamRowSelectionModel?.length) return;
+      if (!teamRowSelectionModel?.length) {
+        setConfirmModalOpen(true);
+        return;
+      }
       await api.updateTeam(Number(teamRowSelectionModel[0]), {
         name: teamName,
       });
@@ -221,7 +243,10 @@ const Management: React.FC = () => {
 
   const handleTeamDelete = async () => {
     try {
-      if (!teamRowSelectionModel?.length) return;
+      if (!teamRowSelectionModel?.length) {
+        setConfirmModalOpen(true);
+        return;
+      }
       await api.deleteTeam(Number(teamRowSelectionModel[0]));
       fetchUsersAndTeams();
       handleTeamDeleteClose();
@@ -240,13 +265,12 @@ const Management: React.FC = () => {
 
   const handleAddClose = () => {
     setAddUserModalOpen(false);
-    setUserName("");
-    setRole("");
-    setTeam("");
+    init();
   };
 
   const handleUpdateOpen = () => {
     if (!userRowSelectionModel?.length) {
+      openSnackbar("Please selct a user first.", "error");
       return;
     }
     const index = Number(userRowSelectionModel[0]);
@@ -254,7 +278,6 @@ const Management: React.FC = () => {
     if (!selectedUser) {
       return;
     }
-    console.log(selectedUser.team_name);
     setUserName(selectedUser.name);
     setRole(selectedUser.role);
     setTeam(selectedUser.team_name);
@@ -264,13 +287,12 @@ const Management: React.FC = () => {
   const handleUpdateClose = () => {
     setUpdateUserModalOpen(false);
     setUserRowSelectionModel([]);
-    setUserName("");
-    setRole("");
-    setTeam("");
+    init();
   };
 
   const handleDeleteOpen = () => {
     if (!userRowSelectionModel?.length) {
+      openSnackbar("Please selct a user first.", "error");
       return;
     }
     setDeleteUserModalOpen(true);
@@ -281,9 +303,14 @@ const Management: React.FC = () => {
     setUserRowSelectionModel([]);
   };
 
+  const handleConfirmClose = () => {
+    setConfirmModalOpen(false);
+  };
+
   const handleAdd = async () => {
+    setIsSubmitted(true);
+    if (!userName || !role || !team) return;
     try {
-      console.log(teams, team);
       const selectedTeam = teams.find((item) => item.name === team);
       if (!selectedTeam) {
         await api.addUser({
@@ -312,6 +339,8 @@ const Management: React.FC = () => {
   };
 
   const handleUpdate = async () => {
+    setIsSubmitted(true);
+    if (!userName || !role || !team) return;
     try {
       const selectedTeam = teams.find((item) => item.name === team);
       if (!userRowSelectionModel?.length || !selectedTeam) {
@@ -349,6 +378,14 @@ const Management: React.FC = () => {
     }
   };
 
+  function init() {
+    setUserName("");
+    setRole("USER");
+    setTeam("No Team");
+    setTeamName("");
+    setIsSubmitted(false);
+  }
+
   return (
     <Box>
       <Typography
@@ -360,7 +397,7 @@ const Management: React.FC = () => {
       </Typography>
       <Grid container spacing={2} sx={{ padding: "12px" }}>
         <Grid item xs={12} sm={6}>
-        <Box sx={{ width: "100%", textAlign: "right", marginBottom: "12px" }}>
+          <Box sx={{ width: "100%", textAlign: "right", marginBottom: "12px" }}>
             <Button variant="contained" onClick={handleTeamAddModalOpen}>
               + Add
             </Button>
@@ -383,7 +420,10 @@ const Management: React.FC = () => {
           </Box>
           <Box sx={{ height: 600, width: "100%" }}>
             <DataGrid
-              rows={originTeams}
+              rows={originTeams.map((item, index) => ({
+                ...item,
+                id: index + 1,
+              }))}
               columns={teamColumns}
               initialState={{
                 pagination: {
@@ -422,7 +462,7 @@ const Management: React.FC = () => {
           </Box>
           <Box sx={{ height: 600, width: "100%" }}>
             <DataGrid
-              rows={users}
+              rows={users.map((item, index) => ({ ...item, id: index + 1 }))}
               columns={userColumns}
               initialState={{
                 pagination: {
@@ -445,10 +485,17 @@ const Management: React.FC = () => {
           </Typography>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
             <TextField
+              required
               label="Name"
               value={teamName}
               onChange={(e) => setTeamName(e.target.value)}
               size="small"
+              error={teamName.length === 0 && isSubmitted}
+              helperText={
+                isSubmitted && teamName.length === 0
+                  ? "Team name is required."
+                  : ""
+              }
             />
           </FormControl>
           <FormControl
@@ -471,10 +518,17 @@ const Management: React.FC = () => {
             size="small"
           >
             <TextField
+              required
               label="Name"
               value={teamName}
               onChange={(e) => setTeamName(e.target.value)}
               size="small"
+              error={teamName.length === 0 && isSubmitted}
+              helperText={
+                isSubmitted && teamName.length === 0
+                  ? "Team name is required."
+                  : ""
+              }
             />
           </FormControl>
           <FormControl
@@ -517,10 +571,17 @@ const Management: React.FC = () => {
           </Typography>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
             <TextField
+              required
               label="Name"
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
               size="small"
+              error={userName.length === 0 && isSubmitted}
+              helperText={
+                isSubmitted && userName.length === 0
+                  ? "Username is required."
+                  : ""
+              }
             />
           </FormControl>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
@@ -564,10 +625,13 @@ const Management: React.FC = () => {
           </Typography>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
             <TextField
+              required
               label="Name"
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
               size="small"
+              error={userName.length === 0}
+              helperText={userName.length === 0 ? "Username is required." : ""}
             />
           </FormControl>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
@@ -597,6 +661,7 @@ const Management: React.FC = () => {
                 })}
             </Select>
           </FormControl>
+
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
             <Button variant="contained" onClick={handleUpdate}>
               Update
@@ -619,6 +684,22 @@ const Management: React.FC = () => {
               onClick={handleDeleteClose}
             >
               No
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+      <Modal open={confirmModalOpen} onClose={handleConfirmClose}>
+        <Box sx={userStyle}>
+          <Typography variant="h6" component="h2">
+            Please select a row first.
+          </Typography>
+          <Box sx={{ textAlign: "right" }}>
+            <Button
+              variant="contained"
+              onClick={handleConfirmClose}
+              color="error"
+            >
+              Okay
             </Button>
           </Box>
         </Box>

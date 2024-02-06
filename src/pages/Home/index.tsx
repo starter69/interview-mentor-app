@@ -121,14 +121,12 @@ const Home = () => {
 
   return (
     <Box>
-      <Typography
-        sx={{ marginTop: "16px", marginBottom: "16px", fontStyle: "italic" }}
-        variant="h4"
-        gutterBottom
+      <Button
+        sx={{ marginTop: "16px" }}
+        variant="contained"
+        color="primary"
+        onClick={handleOpenDialog}
       >
-        Welcome to the Interview Page
-      </Typography>
-      <Button variant="contained" color="primary" onClick={handleOpenDialog}>
         Upload
       </Button>
       <Box sx={{ display: "flex", justifyContent: "right" }}>
@@ -165,7 +163,7 @@ const Home = () => {
                 }}
               >
                 <Typography style={{ color: "white" }}>
-                  {interview.name} - {interview.user_id}
+                  {interview.user.name} : {interview.name}
                 </Typography>
                 <Box
                   component="img"
@@ -181,9 +179,9 @@ const Home = () => {
           );
         })}
         {interviews.length === 0 && (
-          <Typography sx={{ margin: "auto" }} variant="h4" component="h4">
-            No Interviews.
-          </Typography>
+          <Grid item xs={12}>
+            <Typography variant="h6">No Interviews yet</Typography>
+          </Grid>
         )}
       </Grid>
       <Modal open={dialogOpenStatus} onClose={handleCloseDialog}>
