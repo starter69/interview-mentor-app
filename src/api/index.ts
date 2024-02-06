@@ -93,6 +93,9 @@ const deleteInterview = (id: number) => apiService.delete(`interviews/${id}`);
 
 // const updateInterview = (id: number)
 
+const searchInterview = (query: string) =>
+  apiService.get(`interviews/search?query=${query}`);
+
 export {
   Login,
   Register,
@@ -113,4 +116,5 @@ export {
   getInterviews,
   getMyInterviews,
   deleteInterview,
+  searchInterview,
 };
