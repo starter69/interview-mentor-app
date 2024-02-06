@@ -104,7 +104,7 @@ const Management: React.FC = () => {
   const [teamName, setTeamName] = useState("");
   const [team, setTeam] = useState("No Team");
   const [userName, setUserName] = useState("");
-  const [isSubmitClicked, setIsSubmitClicked] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [teamRowSelectionModel, setTeamRowSelectionModel] =
     useState<GridRowSelectionModel>();
   const [userRowSelectionModel, setUserRowSelectionModel] =
@@ -204,7 +204,7 @@ const Management: React.FC = () => {
   };
 
   const handleTeamAdd = async () => {
-    setIsSubmitClicked(true);
+    setIsSubmitted(true);
     if (!teamName) return;
     try {
       await api.addTeam({ name: teamName });
@@ -220,7 +220,7 @@ const Management: React.FC = () => {
   };
 
   const handleTeamUpdate = async () => {
-    setIsSubmitClicked(true);
+    setIsSubmitted(true);
     if (!teamName) return;
     try {
       if (!teamRowSelectionModel?.length) {
@@ -308,7 +308,7 @@ const Management: React.FC = () => {
   };
 
   const handleAdd = async () => {
-    setIsSubmitClicked(true);
+    setIsSubmitted(true);
     if (!userName || !role || !team) return;
     try {
       const selectedTeam = teams.find((item) => item.name === team);
@@ -339,7 +339,7 @@ const Management: React.FC = () => {
   };
 
   const handleUpdate = async () => {
-    setIsSubmitClicked(true);
+    setIsSubmitted(true);
     if (!userName || !role || !team) return;
     try {
       const selectedTeam = teams.find((item) => item.name === team);
@@ -383,7 +383,7 @@ const Management: React.FC = () => {
     setRole("USER");
     setTeam("No Team");
     setTeamName("");
-    setIsSubmitClicked(false);
+    setIsSubmitted(false);
   }
 
   return (
@@ -490,9 +490,9 @@ const Management: React.FC = () => {
               value={teamName}
               onChange={(e) => setTeamName(e.target.value)}
               size="small"
-              error={teamName.length === 0 && isSubmitClicked}
+              error={teamName.length === 0 && isSubmitted}
               helperText={
-                isSubmitClicked && teamName.length === 0
+                isSubmitted && teamName.length === 0
                   ? "Team name is required."
                   : ""
               }
@@ -523,9 +523,9 @@ const Management: React.FC = () => {
               value={teamName}
               onChange={(e) => setTeamName(e.target.value)}
               size="small"
-              error={teamName.length === 0 && isSubmitClicked}
+              error={teamName.length === 0 && isSubmitted}
               helperText={
-                isSubmitClicked && teamName.length === 0
+                isSubmitted && teamName.length === 0
                   ? "Team name is required."
                   : ""
               }
@@ -576,9 +576,9 @@ const Management: React.FC = () => {
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
               size="small"
-              error={userName.length === 0 && isSubmitClicked}
+              error={userName.length === 0 && isSubmitted}
               helperText={
-                isSubmitClicked && userName.length === 0
+                isSubmitted && userName.length === 0
                   ? "Username is required."
                   : ""
               }
