@@ -17,13 +17,13 @@ import { useNavigate } from "react-router";
 function Copyright(props: any) {
   return (
     <Typography
-      variant='body2'
-      color='text.secondary'
-      align='center'
+      variant="body2"
+      color="text.secondary"
+      align="center"
       {...props}
     >
       {"Copyright © "}
-      <Link color='inherit' href='/interviews'>
+      <Link color="inherit" href="/interviews">
         Interview Mentor
       </Link>{" "}
       {new Date().getFullYear()}
@@ -64,7 +64,7 @@ export default function SignIn() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Container component='main' maxWidth='xs'>
+      <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{
@@ -77,18 +77,18 @@ export default function SignIn() {
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component='h1' variant='h5'>
+          <Typography component="h1" variant="h5">
             Sign in
           </Typography>
           <Box sx={{ mt: 1 }}>
             <TextField
-              margin='normal'
+              margin="normal"
               required
               fullWidth
-              id='username'
-              label='Username'
-              name='username'
-              autoComplete='username'
+              id="username"
+              label="Username"
+              name="username"
+              autoComplete="username"
               autoFocus
               value={username}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,14 +103,14 @@ export default function SignIn() {
               onKeyDown={handleKeyPress}
             />
             <TextField
-              margin='normal'
+              margin="normal"
               required
               fullWidth
-              name='password'
-              label='Password'
-              type='password'
-              id='password'
-              autoComplete='current-password'
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
               value={password}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setPassword(event.target.value);
@@ -125,7 +125,7 @@ export default function SignIn() {
             />
             <Button
               fullWidth
-              variant='contained'
+              variant="contained"
               onClick={handleSubmit}
               sx={{ mt: 3, mb: 2 }}
               disabled={username.length && password.length ? false : true}
