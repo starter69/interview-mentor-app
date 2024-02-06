@@ -453,6 +453,7 @@ const Management: React.FC = () => {
     if (!selectedInterview) {
       return;
     }
+    setCompanyName(selectedInterview.name);
     setUpdateInterviewModalOpen(true);
   };
 
@@ -477,39 +478,42 @@ const Management: React.FC = () => {
 
   const handleInterviewUpdate = async () => {
     setIsSubmitted(true);
-    if (!userName || !role || !team) return;
+    if (!companyName || !interviewRowSelectionModel?.length) return;
     try {
-      const selectedTeam = teams.find((item) => item.name === team);
-      if (!userRowSelectionModel?.length || !selectedTeam) {
+      const selectedInterview = interviews.find(
+        (item) => item.id === Number(interviewRowSelectionModel[0])
+      );
+      if (!interviewRowSelectionModel?.length || !selectedInterview) {
         return;
       }
-      await api.updateUser(
-        Number(userRowSelectionModel[userRowSelectionModel.length - 1]),
-        { name: userName, role, team_id: selectedTeam.id, password: "12345678" }
-      );
+      await api.updateInterview(Number(interviewRowSelectionModel[0]), {
+        company_name: companyName,
+      });
       fetchData();
-      openSnackbar("User updated successfully.", "success");
+      openSnackbar("Interview updated successfully.", "success");
     } catch (error: any) {
       openSnackbar(
-        error?.response?.data.error ?? "Failed to update team.",
+        error?.response?.data.error ?? "Failed to update interview.",
         "error"
       );
     }
-    handleUpdateClose();
+    handleInterviewUpdateClose();
   };
 
   const handleInterviewDelete = async () => {
     try {
-      if (!userRowSelectionModel?.length) return;
-      await api.deleteUser(
-        Number(userRowSelectionModel[userRowSelectionModel.length - 1])
+      if (!interviewRowSelectionModel?.length) return;
+      await api.deleteInterview(
+        Number(
+          interviewRowSelectionModel[interviewRowSelectionModel.length - 1]
+        )
       );
       fetchData();
-      handleDeleteClose();
-      openSnackbar("User deleted successfully.", "success");
+      handleInterviewDeleteClose();
+      openSnackbar("Interview deleted successfully.", "success");
     } catch (error: any) {
       openSnackbar(
-        error?.response?.data.error ?? "Failed to delete team.",
+        error?.response?.data.error ?? "Failed to delete interview.",
         "error"
       );
     }
