@@ -32,3 +32,9 @@ export type InterviewDetailType = {
   duration: number;
   path: string;
 };
+
+export type UpdatePaswordRequest = {
+  user_id: number;
+  old_password: string;
+  new_password: string;
+};

@@ -1,5 +1,9 @@
 import axios from "axios";
-import { UserLoginRequest, UserRegisterRequest } from "./types";
+import {
+  UpdatePaswordRequest,
+  UserLoginRequest,
+  UserRegisterRequest,
+} from "./types";
 
 export const host = process.env.REACT_APP_API_HOST || "localhost";
 export const port = process.env.REACT_APP_API_PORT || 3200;
@@ -50,6 +54,8 @@ const updateUser = (
   }
 ) => apiService.patch(`users/${id}`, payload);
 const getUser = (id: number) => apiService.get(`users/${id}`);
+const updatePassword = (payload: UpdatePaswordRequest) =>
+  apiService.put("users/update-password", payload);
 // Teams
 
 const getTeams = () => apiService.get("teams");
@@ -78,11 +84,12 @@ const uploadInterview = (formData: FormData) =>
 
 const getInterviewDetail = (id: number) => apiService.get(`/interviews/${id}`);
 
-const getInterviews = () => apiService.get('interviews');
+const getInterviews = () => apiService.get("interviews");
 
-const getMyInterviews = (userId: number) => apiService.get(`interviews/user/${userId}`)
+const getMyInterviews = (userId: number) =>
+  apiService.get(`interviews/user/${userId}`);
 
-const deleteInterview = (id: number) => apiService.delete(`interviews/${id}`)
+const deleteInterview = (id: number) => apiService.delete(`interviews/${id}`);
 
 // const updateInterview = (id: number)
 
@@ -100,9 +107,10 @@ export {
   deleteUser,
   updateUser,
   getUser,
+  updatePassword,
   uploadInterview,
   getInterviewDetail,
   getInterviews,
   getMyInterviews,
-  deleteInterview
+  deleteInterview,
 };
