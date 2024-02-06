@@ -111,7 +111,7 @@ const Home = () => {
       >
         Upload
       </Button>
-      <Grid container spacing={2} sx={{ padding: "12px" }}>
+      <Grid container spacing={2} sx={{ padding: "12px" }} columns={{ xs: 4, sm: 8, md: 12 }}>
         {interviews.map((interview, index) => {
           return (
             <Grid item xs={2} key={index}>
