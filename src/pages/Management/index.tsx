@@ -383,7 +383,7 @@ const Management: React.FC = () => {
         Team and User Management
       </Typography>
       <Grid container spacing={2} sx={{ padding: "12px" }}>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <Box sx={{ width: "100%", textAlign: "right", marginBottom: "12px" }}>
             <Button variant='contained' onClick={handleTeamAddModalOpen}>
               + Add
@@ -422,7 +422,7 @@ const Management: React.FC = () => {
             />
           </Box>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <Box sx={{ width: "100%", textAlign: "right", marginBottom: "12px" }}>
             <Button variant='contained' onClick={handleAddModalOpen}>
               + Add
