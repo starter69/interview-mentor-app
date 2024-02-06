@@ -59,15 +59,15 @@ const InterviewDetail: React.FC = () => {
             variant="body1"
             sx={{ display: "flex", alignSelf: "center" }}
           >
-            <BusinessIcon sx={{ marginRight: 2 }} />
-            {interviewDetail?.name}
+            <SupportAgentIcon sx={{ marginRight: 2 }} />
+            {username}
           </Typography>
           <Typography
             variant="body1"
             sx={{ display: "flex", alignSelf: "center" }}
           >
-            <SupportAgentIcon sx={{ marginRight: 2 }} />
-            {username}
+            <BusinessIcon sx={{ marginRight: 2 }} />
+            {interviewDetail?.name}
           </Typography>
         </Box>
         <Box sx={{ width: "50%" }}>

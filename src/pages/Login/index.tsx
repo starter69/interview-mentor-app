@@ -57,7 +57,7 @@ export default function SignIn() {
   };
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && username && password) {
       handleSubmit();
     }
   };
