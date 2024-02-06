@@ -35,7 +35,7 @@ const MyInterview: React.FC = () => {
                 navigator(`/interviews/${interview.id}/detail`);
               }}>
                 <Typography style={{ color: "white" }}>
-                  {interview.name} - {interview.user_id}
+                {interview.user.name} : {interview.name}
                 </Typography>
                 <Box
                   component="img"
