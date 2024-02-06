@@ -27,6 +27,7 @@ function Copyright(props: any) {
         Team3/JH
       </Link>{" "}
       {new Date().getFullYear()}
+      {"."}
     </Typography>
   );
 }

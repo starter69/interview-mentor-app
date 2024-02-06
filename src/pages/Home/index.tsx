@@ -103,17 +103,20 @@ const Home = () => {
 
   return (
     <Box>
-      <Typography
-        sx={{ marginTop: "16px", marginBottom: "16px", fontStyle: "italic" }}
-        variant="h4"
-        gutterBottom
+      <Button
+        sx={{ marginTop: "16px" }}
+        variant="contained"
+        color="primary"
+        onClick={handleOpenDialog}
       >
-        Welcome to the Interview Page
-      </Typography>
-      <Button variant="contained" color="primary" onClick={handleOpenDialog}>
         Upload
       </Button>
-      <Grid container spacing={2} sx={{ padding: "12px" }} columns={{ xs: 4, sm: 8, md: 12 }}>
+      <Grid
+        container
+        spacing={2}
+        sx={{ padding: "12px" }}
+        columns={{ xs: 4, sm: 8, md: 12 }}
+      >
         {interviews.map((interview, index) => {
           return (
             <Grid item xs={2} key={index}>
@@ -124,7 +127,7 @@ const Home = () => {
                 }}
               >
                 <Typography style={{ color: "white" }}>
-                  {interview.name} - {interview.user_id}
+                  {interview.user.name} : {interview.name}
                 </Typography>
                 <Box
                   component="img"
@@ -139,6 +142,11 @@ const Home = () => {
             </Grid>
           );
         })}
+        {interviews.length === 0 && (
+          <Grid item xs={12}>
+            <Typography variant="h6">No Interviews yet</Typography>
+          </Grid>
+        )}
       </Grid>
       <Modal open={dialogOpenStatus} onClose={handleCloseDialog}>
         <Box sx={style}>
