@@ -32,8 +32,8 @@ const teamStyle = {
 
 const teamColumns: GridColDef[] = [
   {
-    field: 'id',
-    headerName: '',
+    field: "id",
+    headerName: "",
     width: 50,
     renderCell: (params) => <span>#</span>,
     flex: 1,
@@ -54,8 +54,8 @@ const userStyle = {
 
 const userColumns: GridColDef[] = [
   {
-    field: 'id',
-    headerName: '',
+    field: "id",
+    headerName: "",
     width: 50,
     renderCell: (params) => <span>#</span>,
   },
@@ -171,7 +171,7 @@ const Management: React.FC = () => {
 
   const handleTeamUpdateOpen = () => {
     if (!teamRowSelectionModel?.length) {
-      setConfirmModalOpen(true)
+      setConfirmModalOpen(true);
       return;
     }
     const index = Number(teamRowSelectionModel[0]);
@@ -191,7 +191,7 @@ const Management: React.FC = () => {
 
   const handleTeamDeleteOpen = () => {
     if (!teamRowSelectionModel?.length) {
-      setConfirmModalOpen(true)
+      setConfirmModalOpen(true);
       return;
     }
     setDeleteTeamModalOpen(true);
@@ -218,10 +218,10 @@ const Management: React.FC = () => {
 
   const handleTeamUpdate = async () => {
     try {
-      if (!teamRowSelectionModel?.length){
-        setConfirmModalOpen(true)
+      if (!teamRowSelectionModel?.length) {
+        setConfirmModalOpen(true);
         return;
-      } 
+      }
       await api.updateTeam(Number(teamRowSelectionModel[0]), {
         name: teamName,
       });
@@ -239,7 +239,7 @@ const Management: React.FC = () => {
   const handleTeamDelete = async () => {
     try {
       if (!teamRowSelectionModel?.length) {
-        setConfirmModalOpen(true)
+        setConfirmModalOpen(true);
         return;
       }
       await api.deleteTeam(Number(teamRowSelectionModel[0]));
@@ -267,7 +267,7 @@ const Management: React.FC = () => {
 
   const handleUpdateOpen = () => {
     if (!userRowSelectionModel?.length) {
-      setConfirmModalOpen(true)
+      setConfirmModalOpen(true);
       return;
     }
     const index = Number(userRowSelectionModel[0]);
@@ -291,7 +291,7 @@ const Management: React.FC = () => {
 
   const handleDeleteOpen = () => {
     if (!userRowSelectionModel?.length) {
-      setConfirmModalOpen(true)
+      setConfirmModalOpen(true);
       return;
     }
     setDeleteUserModalOpen(true);
@@ -304,11 +304,10 @@ const Management: React.FC = () => {
 
   const handleConfirmClose = () => {
     setConfirmModalOpen(false);
-  }
+  };
 
   const handleAdd = async () => {
     try {
-      console.log(teams, team);
       const selectedTeam = teams.find((item) => item.name === team);
       if (!selectedTeam) {
         await api.addUser({
@@ -378,29 +377,29 @@ const Management: React.FC = () => {
     <Box>
       <Typography
         sx={{ marginTop: "16px", marginBottom: "10px", fontStyle: "italic" }}
-        variant="h4"
+        variant='h4'
         gutterBottom
       >
         Team and User Management
       </Typography>
       <Grid container spacing={2} sx={{ padding: "12px" }}>
-        <Grid item xs={12} sm={6}>
-        <Box sx={{ width: "100%", textAlign: "right", marginBottom: "12px" }}>
-            <Button variant="contained" onClick={handleTeamAddModalOpen}>
+        <Grid item xs={6}>
+          <Box sx={{ width: "100%", textAlign: "right", marginBottom: "12px" }}>
+            <Button variant='contained' onClick={handleTeamAddModalOpen}>
               + Add
             </Button>
             <Button
               style={{ marginLeft: "8px" }}
-              variant="contained"
-              color="error"
+              variant='contained'
+              color='error'
               onClick={handleTeamDeleteOpen}
             >
               Delete
             </Button>
             <Button
               style={{ marginLeft: "8px" }}
-              variant="contained"
-              color="secondary"
+              variant='contained'
+              color='secondary'
               onClick={handleTeamUpdateOpen}
             >
               Update
@@ -423,23 +422,23 @@ const Management: React.FC = () => {
             />
           </Box>
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={6}>
           <Box sx={{ width: "100%", textAlign: "right", marginBottom: "12px" }}>
-            <Button variant="contained" onClick={handleAddModalOpen}>
+            <Button variant='contained' onClick={handleAddModalOpen}>
               + Add
             </Button>
             <Button
               style={{ marginLeft: "8px" }}
-              variant="contained"
-              color="error"
+              variant='contained'
+              color='error'
               onClick={handleDeleteOpen}
             >
               Delete
             </Button>
             <Button
               style={{ marginLeft: "8px" }}
-              variant="contained"
-              color="secondary"
+              variant='contained'
+              color='secondary'
               onClick={handleUpdateOpen}
             >
               Update
@@ -465,22 +464,22 @@ const Management: React.FC = () => {
       </Grid>
       <Modal open={addTeamModalOpen} onClose={handleTeamAddClose}>
         <Box sx={teamStyle}>
-          <Typography variant="h6" component="h2">
+          <Typography variant='h6' component='h2'>
             Add New Team
           </Typography>
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+          <FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
             <TextField
-              label="Name"
+              label='Name'
               value={teamName}
               onChange={(e) => setTeamName(e.target.value)}
-              size="small"
+              size='small'
             />
           </FormControl>
           <FormControl
             sx={{ m: 1, minWidth: 120, marginTop: "12px" }}
-            size="small"
+            size='small'
           >
-            <Button variant="contained" onClick={handleTeamAdd}>
+            <Button variant='contained' onClick={handleTeamAdd}>
               Add
             </Button>
           </FormControl>
@@ -488,25 +487,25 @@ const Management: React.FC = () => {
       </Modal>
       <Modal open={updateTeamModalOpen} onClose={handleTeamUpdateClose}>
         <Box sx={teamStyle}>
-          <Typography variant="h6" component="h2">
+          <Typography variant='h6' component='h2'>
             Update Existing Team
           </Typography>
           <FormControl
             sx={{ m: 1, minWidth: 120, marginTop: "12px" }}
-            size="small"
+            size='small'
           >
             <TextField
-              label="Name"
+              label='Name'
               value={teamName}
               onChange={(e) => setTeamName(e.target.value)}
-              size="small"
+              size='small'
             />
           </FormControl>
           <FormControl
             sx={{ m: 1, minWidth: 120, marginTop: "12px" }}
-            size="small"
+            size='small'
           >
-            <Button variant="contained" onClick={handleTeamUpdate}>
+            <Button variant='contained' onClick={handleTeamUpdate}>
               Update
             </Button>
           </FormControl>
@@ -514,20 +513,20 @@ const Management: React.FC = () => {
       </Modal>
       <Modal open={deleteTeamModalOpen} onClose={handleTeamDeleteClose}>
         <Box sx={teamStyle}>
-          <Typography variant="h6" component="h2">
+          <Typography variant='h6' component='h2'>
             Are you sure want to delete this team?
           </Typography>
           <Box sx={{ textAlign: "right", marginTop: "12px" }}>
             <Button
-              variant="contained"
+              variant='contained'
               onClick={handleTeamDelete}
-              color="error"
+              color='error'
             >
               Yes
             </Button>
             <Button
               style={{ marginLeft: "12px" }}
-              variant="contained"
+              variant='contained'
               onClick={handleTeamDeleteClose}
             >
               No
@@ -537,24 +536,24 @@ const Management: React.FC = () => {
       </Modal>
       <Modal open={addUserModalOpen} onClose={handleAddClose}>
         <Box sx={userStyle}>
-          <Typography variant="h6" component="h2">
+          <Typography variant='h6' component='h2'>
             Add New User
           </Typography>
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+          <FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
             <TextField
-              label="Name"
+              label='Name'
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
-              size="small"
+              size='small'
             />
           </FormControl>
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+          <FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
             <InputLabel>Role</InputLabel>
-            <Select value={role} label="Role" onChange={handleRole}>
+            <Select value={role} label='Role' onChange={handleRole}>
               {roles.map((role, index) => {
                 return (
                   <MenuItem value={role.title} key={index}>
-                    <Typography className={role.style} variant="caption">
+                    <Typography className={role.style} variant='caption'>
                       {role.title}
                     </Typography>
                   </MenuItem>
@@ -562,21 +561,21 @@ const Management: React.FC = () => {
               })}
             </Select>
           </FormControl>
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+          <FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
             <InputLabel>Team</InputLabel>
-            <Select value={team.toString()} label="Role" onChange={handleTeam}>
+            <Select value={team.toString()} label='Role' onChange={handleTeam}>
               {teams.length > 0 &&
-                teams.map((t) => {
+                teams.map((t, index) => {
                   return (
-                    <MenuItem value={t.name} key={t.id}>
+                    <MenuItem value={t.id} key={t.id}>
                       {t.name}
                     </MenuItem>
                   );
                 })}
             </Select>
           </FormControl>
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-            <Button variant="contained" onClick={handleAdd}>
+          <FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
+            <Button variant='contained' onClick={handleAdd}>
               Add
             </Button>
           </FormControl>
@@ -584,24 +583,24 @@ const Management: React.FC = () => {
       </Modal>
       <Modal open={updateUserModalOpen} onClose={handleUpdateClose}>
         <Box sx={userStyle}>
-          <Typography variant="h6" component="h2">
+          <Typography variant='h6' component='h2'>
             Update Existing User
           </Typography>
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+          <FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
             <TextField
-              label="Name"
+              label='Name'
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
-              size="small"
+              size='small'
             />
           </FormControl>
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+          <FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
             <InputLabel>Role</InputLabel>
-            <Select value={role} label="Role" onChange={handleRole}>
+            <Select value={role} label='Role' onChange={handleRole}>
               {roles.map((role, index) => {
                 return (
                   <MenuItem value={role.title} key={index}>
-                    <Typography className={role.style} variant="caption">
+                    <Typography className={role.style} variant='caption'>
                       {role.title}
                     </Typography>
                   </MenuItem>
@@ -609,9 +608,9 @@ const Management: React.FC = () => {
               })}
             </Select>
           </FormControl>
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+          <FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
             <InputLabel>Team</InputLabel>
-            <Select value={team.toString()} label="Role" onChange={handleTeam}>
+            <Select value={team.toString()} label='Role' onChange={handleTeam}>
               {teams.length > 0 &&
                 teams.map((t) => {
                   return (
@@ -623,8 +622,8 @@ const Management: React.FC = () => {
             </Select>
           </FormControl>
 
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-            <Button variant="contained" onClick={handleUpdate}>
+          <FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
+            <Button variant='contained' onClick={handleUpdate}>
               Update
             </Button>
           </FormControl>
@@ -632,16 +631,16 @@ const Management: React.FC = () => {
       </Modal>
       <Modal open={deleteUserModalOpen} onClose={handleDeleteClose}>
         <Box sx={userStyle}>
-          <Typography variant="h6" component="h2">
+          <Typography variant='h6' component='h2'>
             Are you sure want to delete this user?
           </Typography>
           <Box sx={{ textAlign: "right" }}>
-            <Button variant="contained" onClick={handleDelete} color="error">
+            <Button variant='contained' onClick={handleDelete} color='error'>
               Yes
             </Button>
             <Button
               style={{ marginLeft: "12px" }}
-              variant="contained"
+              variant='contained'
               onClick={handleDeleteClose}
             >
               No
@@ -651,11 +650,15 @@ const Management: React.FC = () => {
       </Modal>
       <Modal open={confirmModalOpen} onClose={handleConfirmClose}>
         <Box sx={userStyle}>
-          <Typography variant="h6" component="h2">
-          Please select a row first.
+          <Typography variant='h6' component='h2'>
+            Please select a row first.
           </Typography>
           <Box sx={{ textAlign: "right" }}>
-            <Button variant="contained" onClick={handleConfirmClose} color="error">
+            <Button
+              variant='contained'
+              onClick={handleConfirmClose}
+              color='error'
+            >
               Okay
             </Button>
           </Box>

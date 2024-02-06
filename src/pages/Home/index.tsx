@@ -37,7 +37,7 @@ const Home = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [interviews, setInterviews] = useState<InterviewDetailType[]>([]);
-  const navigator = useNavigate()
+  const navigator = useNavigate();
 
   const fetchInterviews = async () => {
     try {
@@ -92,56 +92,68 @@ const Home = () => {
 
   return (
     <Box>
-      <Button sx={{ marginTop: '16px'}} variant="contained" color="primary" onClick={handleOpenDialog}>
+      <Button
+        sx={{ marginTop: "16px" }}
+        variant='contained'
+        color='primary'
+        onClick={handleOpenDialog}
+      >
         Upload
       </Button>
-      <Grid container spacing={2} sx={{ padding: "12px" }} columns={{ xs: 4, sm: 8, md: 12 }}>
+      <Grid container spacing={2} sx={{ padding: "12px" }}>
         {interviews.map((interview, index) => {
           return (
             <Grid item xs={2} key={index}>
-              <Box className="interview-component" onClick={() => {
-                navigator(`/interviews/${interview.id}/detail`);
-              }}>
+              <Box
+                className='interview-component'
+                onClick={() => {
+                  navigator(`/interviews/${interview.id}/detail`);
+                }}
+              >
                 <Typography style={{ color: "white" }}>
                   {interview.user.name} : {interview.name}
                 </Typography>
                 <Box
-                  component="img"
+                  component='img'
                   sx={{
                     height: 50,
                     width: 50,
                   }}
-                  alt="playbtn"
+                  alt='playbtn'
                   src={playBtn}
                 />
               </Box>
             </Grid>
           );
         })}
-        {interviews.length === 0 && <Grid item xs={12}><Typography variant="h6">No Interviews yet</Typography></Grid>}
+        {interviews.length === 0 && (
+          <Grid item xs={12}>
+            <Typography variant='h6'>No Interviews yet</Typography>
+          </Grid>
+        )}
       </Grid>
       <Modal open={dialogOpenStatus} onClose={handleCloseDialog}>
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <Typography id='modal-modal-title' variant='h6' component='h2'>
             Upload Interview Video
           </Typography>
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+          <FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
             <TextField
-              type="file"
-              id="outlined-size-small"
-              size="small"
+              type='file'
+              id='outlined-size-small'
+              size='small'
               onChange={handleFileChange}
               error={!selectedFile}
               helperText={!selectedFile && "File is required"}
             />
           </FormControl>
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+          <FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
             <TextField
-              label="Company Name"
-              id="outlined-size-small"
+              label='Company Name'
+              id='outlined-size-small'
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
-              size="small"
+              size='small'
               error={!companyName}
               helperText={!companyName && "Company Name is required"}
             />
@@ -149,19 +161,19 @@ const Home = () => {
           <Box sx={{ textAlign: "center" }}>
             <Button
               sx={{ marginRight: 3 }}
-              variant="contained"
+              variant='contained'
               onClick={handleUpload}
               disabled={isLoading}
             >
               {isLoading ? (
-                <CircularProgress size={24} color="inherit" />
+                <CircularProgress size={24} color='inherit' />
               ) : (
                 "Upload"
               )}
             </Button>
             <Button
-              variant="contained"
-              color="error"
+              variant='contained'
+              color='error'
               onClick={handleCloseDialog}
             >
               Cancel
