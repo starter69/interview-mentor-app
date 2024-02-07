@@ -31,6 +31,7 @@ export type InterviewDetailType = {
   date: string;
   duration: number;
   path: string;
+  thumbnail_path: string;
   user: {
     name: string;
   };
@@ -44,7 +45,7 @@ export type UpdatePaswordRequest = {
 
 export type ResetPaswordRequest = {
   user_id: number;
-}
+};
 
 export type UpdateInterviewRequest = {
   company_name: string;

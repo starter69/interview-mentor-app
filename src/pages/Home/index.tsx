@@ -21,6 +21,7 @@ import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 
 import "../../index.css";
+import { relative } from "path";
 
 const style = {
   position: "absolute" as "absolute",
@@ -162,12 +163,14 @@ const Home = () => {
                 onClick={() => {
                   navigator(`/interviews/${interview.id}/detail`);
                 }}
+                sx={{ position: "relative" }}
               >
-                <VideoThumbnail
-                  videoUrl={`http://${api.host}:${api.port}/` + interview?.path}
-                  thumbnailHandler={(thumbnail: any) => console.log(thumbnail)}
-                  width={120}
-                  height={80}
+                <img
+                  src={
+                    `http://${api.host}:${api.port}/` +
+                    interview?.thumbnail_path
+                  }
+                  alt="thumbnail"
                 />
                 <Box
                   component="img"
