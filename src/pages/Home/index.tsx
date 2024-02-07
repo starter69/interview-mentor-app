@@ -133,7 +133,7 @@ const Home = () => {
                 sx= {{ position: 'relative' }}
               >
                 <Typography style={{ color: "white" }}>
-                  {interview.name} - {interview.user_id}
+                   {interview.user.name} - {interview.name}
                 </Typography>
                 <Box
                   component="img"
