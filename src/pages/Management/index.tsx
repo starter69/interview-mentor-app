@@ -16,11 +16,11 @@ import {
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useSnackbar } from "providers/SnackbarProvider";
 import { TeamInfo } from "api/types";
-
-import "../../index.css";
 import { InterviewDetailType } from "api/types";
 import { convertDateFormat } from "utils/convertDateFormat";
 import { convertSecondsToHMS } from "utils/convertSecondToHMS";
+
+import "../../index.css";
 
 const teamStyle = {
   position: "absolute" as "absolute",
@@ -34,13 +34,7 @@ const teamStyle = {
 };
 
 const teamColumns: GridColDef[] = [
-  {
-    field: "id",
-    headerName: "",
-    width: 50,
-    renderCell: (params) => <span>#</span>,
-    flex: 1,
-  },
+  { field: "index", headerName: "ID", flex: 1 },
   { field: "name", headerName: "Team Name", flex: 1 },
 ];
 
@@ -49,19 +43,17 @@ const userStyle = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 650,
+  width: "45%", // Set a relative width using percentage
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
+  "@media (max-width: 600px)": {
+    width: "90%",
+  },
 };
 
 const userColumns: GridColDef[] = [
-  {
-    field: "id",
-    headerName: "",
-    width: 50,
-    renderCell: (params) => <span>#</span>,
-  },
+  { field: "index", headerName: "ID", flex: 1 },
   { field: "name", headerName: "User Name", flex: 1 },
   { field: "team_name", headerName: "Team Name", flex: 1 },
   {
@@ -85,23 +77,11 @@ const userColumns: GridColDef[] = [
   },
 ];
 
-const interviewStyle = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 650,
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 4,
-};
-
 const interviewColumns: GridColDef[] = [
   {
-    field: "id",
-    headerName: "",
-    width: 50,
-    renderCell: (params) => <span>#</span>,
+    field: "index",
+    headerName: "ID",
+    flex: 1
   },
   { field: "name", headerName: "Company Name", flex: 1 },
   {
@@ -144,6 +124,7 @@ const Management: React.FC = () => {
   const [addUserModalOpen, setAddUserModalOpen] = useState(false);
   const [updateUserModalOpen, setUpdateUserModalOpen] = useState(false);
   const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
+  const [resetUserModalOpen, setResetUserModalOpen] = useState(false);
   const [updateInterviewModalOpen, setUpdateInterviewModalOpen] =
     useState(false);
   const [deleteInterviewModalOpen, setDeleteInterviewModalOpen] =
@@ -365,9 +346,27 @@ const Management: React.FC = () => {
     setUserRowSelectionModel([]);
   };
 
+  const handleResetOpen = () => {
+    if (!userRowSelectionModel?.length) {
+      openSnackbar(
+        "Please selct a user first.",
+        "error"
+      );
+      return;
+    }
+    setResetUserModalOpen(true);
+  }
+
+  
+  const handleResetClose = () => {
+    setResetUserModalOpen(false);
+    setUserRowSelectionModel([]);
+  };
+
   const handleConfirmClose = () => {
     setConfirmModalOpen(false);
-  };
+    setInterviewRowSelectionModel([])
+  }
 
   const handleAdd = async () => {
     setIsSubmitted(true);
@@ -410,13 +409,13 @@ const Management: React.FC = () => {
       }
       await api.updateUser(
         Number(userRowSelectionModel[userRowSelectionModel.length - 1]),
-        { name: userName, role, team_id: selectedTeam.id, password: "12345678" }
+        { name: userName, role, team_id: selectedTeam.id }
       );
       fetchData();
       openSnackbar("User updated successfully.", "success");
     } catch (error: any) {
       openSnackbar(
-        error?.response?.data.error ?? "Failed to update team.",
+        error?.response?.data.error ?? "Failed to update user.",
         "error"
       );
     }
@@ -434,7 +433,25 @@ const Management: React.FC = () => {
       openSnackbar("User deleted successfully.", "success");
     } catch (error: any) {
       openSnackbar(
-        error?.response?.data.error ?? "Failed to delete team.",
+        error?.response?.data.error ?? "Failed to delete user.",
+        "error"
+      );
+    }
+  };
+
+  const handleReset = async () => {
+    try {
+      const selectedTeam = teams.find((item) => item.name === team);
+      if (!userRowSelectionModel?.length || !selectedTeam) {
+        return;
+      }
+      await api.resetPassword(Number(userRowSelectionModel[0]));
+      fetchData();
+      handleResetClose();
+      openSnackbar("User reseted successfully.", "success");
+    } catch (error: any) {
+      openSnackbar(
+        error?.response?.data.error ?? "Failed to reset password.",
         "error"
       );
     }
@@ -562,10 +579,7 @@ const Management: React.FC = () => {
           </Box>
           <Box sx={{ height: 600, width: "100%" }}>
             <DataGrid
-              rows={originTeams.map((item, index) => ({
-                ...item,
-                id: index + 1,
-              }))}
+             rows={originTeams.map((item, index) => ({ index: index+1, ...item}))}
               columns={teamColumns}
               initialState={{
                 pagination: {
@@ -601,10 +615,18 @@ const Management: React.FC = () => {
             >
               Update
             </Button>
+            <Button
+              style={{ marginLeft: "8px" }}
+              variant="contained"
+              color="inherit"
+              onClick={handleResetOpen}
+            >
+              Reset
+            </Button>
           </Box>
           <Box sx={{ height: 600, width: "100%" }}>
             <DataGrid
-              rows={users.map((item, index) => ({ ...item, id: index + 1 }))}
+              rows={users.map((item, index) => ({index: index+1, ...item}))}
               columns={userColumns}
               initialState={{
                 pagination: {
@@ -641,8 +663,8 @@ const Management: React.FC = () => {
           <Box sx={{ height: 600, width: "100%" }}>
             <DataGrid
               rows={interviews.map((item, index) => ({
+                index: index + 1,
                 ...item,
-                id: index + 1,
               }))}
               columns={interviewColumns}
               initialState={{
@@ -869,6 +891,25 @@ const Management: React.FC = () => {
           </Box>
         </Box>
       </Modal>
+      <Modal open={resetUserModalOpen} onClose={handleResetClose}>
+        <Box sx={userStyle}>
+          <Typography variant="h6" component="h2">
+            Are you sure want to reset password of this user?
+          </Typography>
+          <Box sx={{ textAlign: "right" }}>
+            <Button variant="contained" onClick={handleReset} color="error">
+            Yes
+            </Button>
+            <Button
+              style={{ marginLeft: "12px" }}
+              variant="contained"
+              onClick={handleResetClose}
+            >
+              No
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
       <Modal open={confirmModalOpen} onClose={handleConfirmClose}>
         <Box sx={userStyle}>
           <Typography variant="h6" component="h2">
@@ -889,7 +930,7 @@ const Management: React.FC = () => {
         open={updateInterviewModalOpen}
         onClose={handleInterviewUpdateClose}
       >
-        <Box sx={interviewStyle}>
+        <Box sx={teamStyle}>
           <Typography variant="h6" component="h2">
             Update Existing Interview
           </Typography>
@@ -920,11 +961,11 @@ const Management: React.FC = () => {
         open={deleteInterviewModalOpen}
         onClose={handleInterviewDeleteClose}
       >
-        <Box sx={interviewStyle}>
+        <Box sx={teamStyle}>
           <Typography variant="h6" component="h2">
             Are you sure want to delete this interview?
           </Typography>
-          <Box sx={{ textAlign: "right" }}>
+          <Box sx={{ textAlign: "right", marginTop: "16px" }}>
             <Button
               variant="contained"
               onClick={handleInterviewDelete}

@@ -51,12 +51,12 @@ const updateUser = (
     name: string;
     role: string;
     team_id: number;
-    password: string;
   }
 ) => apiService.patch(`users/${id}`, payload);
 const getUser = (id: number) => apiService.get(`users/${id}`);
 const updatePassword = (payload: UpdatePaswordRequest) =>
   apiService.put("users/update-password", payload);
+const resetPassword = (id: number) => apiService.get(`users/${id}/reset-password`)
 // Teams
 
 const getTeams = () => apiService.get("teams");
@@ -113,6 +113,7 @@ export {
   updateUser,
   getUser,
   updatePassword,
+  resetPassword,
   uploadInterview,
   getInterviewDetail,
   getInterviews,

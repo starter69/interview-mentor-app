@@ -42,6 +42,10 @@ export type UpdatePaswordRequest = {
   new_password: string;
 };
 
+export type ResetPaswordRequest = {
+  user_id: number;
+}
+
 export type UpdateInterviewRequest = {
   company_name: string;
 };
