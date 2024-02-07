@@ -12,22 +12,6 @@ code {
     monospace;
 }
 
-.interview-component {
-  padding: 8px;
-  border-radius: 10px;
-  height: 100px;
-  background-color: darkgray;
-  transition: background-color 0.3s ease;
-  position: relative;
-}
-
-.interview-component:hover {
-  padding: 8px;
-  border-radius: 10px;
-  height: 100px;
-  background-color: lightgray;
-}
-
 .admin-label,
 .lead-label,
 .user-label {
@@ -47,8 +31,15 @@ code {
 
 .playBtn {
   visibility: hidden;
+  z-index: 5000;
 }
 
 .playBtn:hover {
   visibility: visible;
+  z-index: 5000;
+}
+
+.thumbnail {
+  width: 100%;
+  height: 100%;
 }

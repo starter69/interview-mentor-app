@@ -152,7 +152,7 @@ const Home = () => {
         container
         spacing={2}
         sx={{ padding: "12px" }}
-        columns={{ xs: 4, sm: 8, md: 12 }}
+        columns={{ xs: 4, sm: 8, md: 8 }}
       >
         {interviews.map((interview) => {
           return (
@@ -163,16 +163,11 @@ const Home = () => {
                   navigator(`/interviews/${interview.id}/detail`);
                 }}
               >
-                <Typography style={{ color: "white" }}>
-                  {interview.user.name} - {interview.name}
-                </Typography>
                 <VideoThumbnail
                   videoUrl={`http://${api.host}:${api.port}/` + interview?.path}
                   thumbnailHandler={(thumbnail: any) => console.log(thumbnail)}
-                  width={200}
-                  height={100}
-                  className="interview-component"
-                  style={{}}
+                  width={120}
+                  height={80}
                 />
                 <Box
                   component="img"
@@ -189,6 +184,9 @@ const Home = () => {
                   src={playBtn}
                 />
               </Box>
+              <Typography>
+                {interview.user.name} - {interview.name}
+              </Typography>
             </Grid>
           );
         })}
