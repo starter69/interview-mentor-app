@@ -122,16 +122,15 @@ const Home = () => {
 
   return (
     <Box>
-      <Button
-        sx={{ marginTop: "16px" }}
-        variant="contained"
-        color="primary"
-        onClick={handleOpenDialog}
-      >
-        Upload
-      </Button>
-
-      <Box sx={{ display: "flex", justifyContent: "right" }}>
+      <Box sx={{ marginTop: "16px", display: "flex", justifyContent: "right" }}>
+        <Button
+          sx={{ marginRight: 4 }}
+          variant="contained"
+          color="primary"
+          onClick={handleOpenDialog}
+        >
+          Upload
+        </Button>
         <TextField
           id="search-bar"
           className="text"
@@ -157,40 +156,39 @@ const Home = () => {
       >
         {interviews.map((interview) => {
           return (
-            <Grid item xs={2} key={interview.id} sx={{position: 'relative'}}>
+            <Grid item xs={2} key={interview.id}>
               <Box
                 className="interview-component"
                 onClick={() => {
                   navigator(`/interviews/${interview.id}/detail`);
                 }}
-                sx= {{ position: 'relative' }}
               >
                 <Typography style={{ color: "white" }}>
-                   {interview.user.name} - {interview.name}
+                  {interview.user.name} - {interview.name}
                 </Typography>
+                <VideoThumbnail
+                  videoUrl={`http://${api.host}:${api.port}/` + interview?.path}
+                  thumbnailHandler={(thumbnail: any) => console.log(thumbnail)}
+                  width={200}
+                  height={100}
+                  className="interview-component"
+                  style={{}}
+                />
                 <Box
                   component="img"
                   sx={{
                     height: 50,
                     width: 50,
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
                   }}
+                  className="playBtn"
                   alt="playbtn"
                   src={playBtn}
                 />
               </Box>
-              <VideoThumbnail
-                videoUrl={`http://${api.host}:${api.port}/` + interview?.path}
-                thumbnailHandler={(thumbnail: any) => console.log(thumbnail)}
-                width={200}
-                height={100}
-                className="interview-component"
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                }}
-              />
             </Grid>
           );
         })}

@@ -1,14 +1,14 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
@@ -31,16 +31,24 @@ code {
 .admin-label,
 .lead-label,
 .user-label {
-background-color: red;
-color: white;
-border-radius: 5px;
-padding: 2px 8px;
+  background-color: red;
+  color: white;
+  border-radius: 5px;
+  padding: 2px 8px;
 }
 
 .lead-label {
-background-color: green;
+  background-color: green;
 }
 
 .user-label {
-background-color: gray;
+  background-color: gray;
+}
+
+.playBtn {
+  visibility: hidden;
+}
+
+.playBtn:hover {
+  visibility: visible;
 }
