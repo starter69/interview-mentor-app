@@ -77,23 +77,11 @@ const userColumns: GridColDef[] = [
   },
 ];
 
-const interviewStyle = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 650,
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 4,
-};
-
 const interviewColumns: GridColDef[] = [
   {
-    field: "id",
-    headerName: "",
-    width: 50,
-    renderCell: (params) => <span>#</span>,
+    field: "index",
+    headerName: "ID",
+    flex: 1
   },
   { field: "name", headerName: "Company Name", flex: 1 },
   {
@@ -675,8 +663,8 @@ const Management: React.FC = () => {
           <Box sx={{ height: 600, width: "100%" }}>
             <DataGrid
               rows={interviews.map((item, index) => ({
+                index: index + 1,
                 ...item,
-                id: index + 1,
               }))}
               columns={interviewColumns}
               initialState={{
@@ -942,7 +930,7 @@ const Management: React.FC = () => {
         open={updateInterviewModalOpen}
         onClose={handleInterviewUpdateClose}
       >
-        <Box sx={interviewStyle}>
+        <Box sx={teamStyle}>
           <Typography variant="h6" component="h2">
             Update Existing Interview
           </Typography>
@@ -973,11 +961,11 @@ const Management: React.FC = () => {
         open={deleteInterviewModalOpen}
         onClose={handleInterviewDeleteClose}
       >
-        <Box sx={interviewStyle}>
+        <Box sx={teamStyle}>
           <Typography variant="h6" component="h2">
             Are you sure want to delete this interview?
           </Typography>
-          <Box sx={{ textAlign: "right" }}>
+          <Box sx={{ textAlign: "right", marginTop: "16px" }}>
             <Button
               variant="contained"
               onClick={handleInterviewDelete}
