@@ -33,7 +33,7 @@ export type InterviewDetailType = {
   path: string;
   user: {
     name: string;
-  }
+  };
 };
 
 export type UpdatePaswordRequest = {
@@ -44,4 +44,8 @@ export type UpdatePaswordRequest = {
 
 export type ResetPaswordRequest = {
   user_id: number;
+}
+
+export type UpdateInterviewRequest = {
+  company_name: string;
 };

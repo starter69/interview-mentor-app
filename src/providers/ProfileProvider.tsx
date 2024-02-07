@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import * as api from "api";
 import { useLocation, useNavigate } from "react-router";
+import { useSnackbar } from "providers/SnackbarProvider";
 
 interface ProfileContextProps {
   profile: any;
@@ -20,14 +21,22 @@ export const ProfileProvider = ({ children }: { children: ReactElement }) => {
   const navigator = useNavigate();
   const location = useLocation();
 
+  const { openSnackbar } = useSnackbar();
+
   useEffect(() => {
     const getProfile = async () => {
       try {
         const { data } = await api.GetCurrentUser();
         if (data.name) setProfile(data);
-        else if (location.pathname !== "/login") navigator("/login");
+        else if (location.pathname !== "/login") {
+          navigator("/login");
+          openSnackbar("Not authorized. Please login first.", "error");
+        }
       } catch (error) {
-        if (location.pathname !== "/login") navigator("/login");
+        if (location.pathname !== "/login") {
+          navigator("/login");
+          openSnackbar("Not authorized. Please login first.", "error");
+        }
       }
     };
 
