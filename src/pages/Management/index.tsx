@@ -34,8 +34,8 @@ const teamStyle = {
 };
 
 const teamColumns: GridColDef[] = [
-  { field: "index", headerName: "ID", flex: 1 },
-  { field: "name", headerName: "Team Name", flex: 1 },
+  { field: "index", headerName: "#", flex: 1 },
+  { field: "name", headerName: "Team", flex: 1 },
 ];
 
 const userStyle = {
@@ -53,9 +53,9 @@ const userStyle = {
 };
 
 const userColumns: GridColDef[] = [
-  { field: "index", headerName: "ID", flex: 1 },
-  { field: "name", headerName: "User Name", flex: 1 },
-  { field: "team_name", headerName: "Team Name", flex: 1 },
+  { field: "index", headerName: "#", flex: 1 },
+  { field: "name", headerName: "User", flex: 1 },
+  { field: "team_name", headerName: "Team", flex: 1 },
   {
     field: "role",
     headerName: "Role",
@@ -80,13 +80,13 @@ const userColumns: GridColDef[] = [
 const interviewColumns: GridColDef[] = [
   {
     field: "index",
-    headerName: "ID",
-    flex: 1
+    headerName: "#",
+    flex: 1,
   },
-  { field: "name", headerName: "Company Name", flex: 1 },
+  { field: "name", headerName: "Company", flex: 1 },
   {
     field: "user_name",
-    headerName: "User Name",
+    headerName: "User",
     flex: 1,
     renderCell: (params) => {
       return <span>{params.row.user.name}</span>;
@@ -102,7 +102,7 @@ const interviewColumns: GridColDef[] = [
   },
   {
     field: "date",
-    headerName: "Recorded Date",
+    headerName: "Created At",
     flex: 1,
     renderCell: (params) => {
       return <span>{convertDateFormat(params.value)}</span>;
@@ -348,16 +348,12 @@ const Management: React.FC = () => {
 
   const handleResetOpen = () => {
     if (!userRowSelectionModel?.length) {
-      openSnackbar(
-        "Please selct a user first.",
-        "error"
-      );
+      openSnackbar("Please selct a user first.", "error");
       return;
     }
     setResetUserModalOpen(true);
-  }
+  };
 
-  
   const handleResetClose = () => {
     setResetUserModalOpen(false);
     setUserRowSelectionModel([]);
@@ -365,8 +361,8 @@ const Management: React.FC = () => {
 
   const handleConfirmClose = () => {
     setConfirmModalOpen(false);
-    setInterviewRowSelectionModel([])
-  }
+    setInterviewRowSelectionModel([]);
+  };
 
   const handleAdd = async () => {
     setIsSubmitted(true);
@@ -547,14 +543,7 @@ const Management: React.FC = () => {
 
   return (
     <Box>
-      <Typography
-        sx={{ marginTop: "16px", marginBottom: "10px", fontStyle: "italic" }}
-        variant="h4"
-        gutterBottom
-      >
-        Team and User Management
-      </Typography>
-      <Grid container spacing={2} sx={{ padding: "12px" }}>
+      <Grid container spacing={2} sx={{ marginTop: 6, padding: "12px" }}>
         <Grid item xs={12} sm={4}>
           <Box sx={{ width: "100%", textAlign: "right", marginBottom: "12px" }}>
             <Button variant="contained" onClick={handleTeamAddModalOpen}>
@@ -579,7 +568,10 @@ const Management: React.FC = () => {
           </Box>
           <Box sx={{ height: 600, width: "100%" }}>
             <DataGrid
-             rows={originTeams.map((item, index) => ({ index: index+1, ...item}))}
+              rows={originTeams.map((item, index) => ({
+                index: index + 1,
+                ...item,
+              }))}
               columns={teamColumns}
               initialState={{
                 pagination: {
@@ -626,7 +618,7 @@ const Management: React.FC = () => {
           </Box>
           <Box sx={{ height: 600, width: "100%" }}>
             <DataGrid
-              rows={users.map((item, index) => ({index: index+1, ...item}))}
+              rows={users.map((item, index) => ({ index: index + 1, ...item }))}
               columns={userColumns}
               initialState={{
                 pagination: {
@@ -898,7 +890,7 @@ const Management: React.FC = () => {
           </Typography>
           <Box sx={{ textAlign: "right" }}>
             <Button variant="contained" onClick={handleReset} color="error">
-            Yes
+              Yes
             </Button>
             <Button
               style={{ marginLeft: "12px" }}
