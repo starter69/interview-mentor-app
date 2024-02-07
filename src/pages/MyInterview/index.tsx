@@ -31,9 +31,9 @@ const MyInterview: React.FC = () => {
         Welcome to the My Interview Page
       </Typography>
       <Grid container spacing={2} sx={{ padding: "12px" }} columns={{ xs: 4, sm: 8, md: 12 }}>
-        {myInterviews.length > 0 && myInterviews.map((interview, index) => {
+        {myInterviews.length > 0 && myInterviews.map((interview) => {
           return (
-            <Grid item xs={2} key={index}>
+            <Grid item xs={2} key={interview.id}>
               <Box className="interview-component" onClick={() => {
                 navigator(`/interviews/${interview.id}/detail`);
               }}>

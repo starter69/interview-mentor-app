@@ -17,7 +17,6 @@ import { useSnackbar } from "providers/SnackbarProvider";
 import { InterviewDetailType } from "api/types";
 import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
-import { relative } from "path";
 
 import "../../index.css";
 
@@ -122,9 +121,9 @@ const Home = () => {
         sx={{ padding: "12px" }}
         columns={{ xs: 4, sm: 8, md: 12 }}
       >
-        {interviews.map((interview, index) => {
+        {interviews.map((interview) => {
           return (
-            <Grid item xs={2} key={index} sx={{position: 'relative'}}>
+            <Grid item xs={2} key={interview.id} sx={{position: 'relative'}}>
               <Box
                 className="interview-component"
                 onClick={() => {
