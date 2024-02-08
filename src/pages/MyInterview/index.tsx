@@ -6,6 +6,7 @@ import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import * as api from "api";
 import { InterviewDetailType } from "api/types";
 import { useNavigate } from "react-router";
+import InterviewCard from "pages/InterviewCard";
 
 const MyInterview: React.FC = () => {
   const [myInterviews, setMyInterviews] = useState<InterviewDetailType[]>([]);
@@ -36,37 +37,7 @@ const MyInterview: React.FC = () => {
       >
         {myInterviews.length > 0 &&
           myInterviews.map((interview) => {
-            return (
-              <Grid item xs={2} key={interview.id}>
-                <Box
-                  className="interview-component"
-                  onClick={() => {
-                    navigator(`/interviews/${interview.id}/detail`);
-                  }}
-                  sx={{ position: "relative" }}
-                >
-                  <img
-                    src={
-                      `http://${api.host}:${api.port}/` +
-                      interview?.thumbnail_path
-                    }
-                    alt="thumbnail"
-                  />
-                </Box>
-                <Typography
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignSelf: "center",
-                  }}
-                >
-                  <SupportAgentIcon />
-                  {interview.user.name}
-                  <BusinessIcon />
-                  {interview.name}
-                </Typography>
-              </Grid>
-            );
+            return <InterviewCard interview={interview} />;
           })}
         {myInterviews.length === 0 && (
           <Grid item xs={12}>

@@ -19,8 +19,7 @@ import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
-
-import "../../index.css";
+import InterviewCard from "pages/InterviewCard";
 
 const style = {
   position: "absolute" as "absolute",
@@ -155,52 +154,7 @@ const Home = () => {
         columns={{ xs: 4, sm: 8, md: 8 }}
       >
         {interviews.map((interview) => {
-          return (
-            <Grid item xs={2} key={interview.id}>
-              <Box
-                className="interview-component"
-                onClick={() => {
-                  navigator(`/interviews/${interview.id}/detail`);
-                }}
-              >
-                <Box
-                  sx={{ position: "relative" }}
-                  className="interview-thumbnail"
-                >
-                  <img
-                    src={`http://${api.host}:${api.port}/${interview?.thumbnail_path}`}
-                    alt="thumbnail"
-                  />
-                  <img src={`/play-btn.png`} className="play-button" />
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                }}
-              >
-                <Box
-                  sx={{
-                    alignContent: "center",
-                    display: "flex",
-                  }}
-                >
-                  <SupportAgentIcon sx={{ marginRight: 1 }} />
-                  {interview.user.name}
-                </Box>
-                <Box
-                  sx={{
-                    alignContent: "center",
-                    display: "flex",
-                  }}
-                >
-                  <BusinessIcon sx={{ marginRight: 1 }} />
-                  {interview.name}
-                </Box>
-              </Box>
-            </Grid>
-          );
+          return <InterviewCard interview={interview} />;
         })}
         {interviews.length === 0 && (
           <Grid item xs={12}>
