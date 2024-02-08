@@ -444,7 +444,7 @@ const Management: React.FC = () => {
       await api.resetPassword(Number(userRowSelectionModel[0]));
       fetchData();
       handleResetClose();
-      openSnackbar("User reseted successfully.", "success");
+      openSnackbar("User reset successfully.", "success");
     } catch (error: any) {
       openSnackbar(
         error?.response?.data.error ?? "Failed to reset password.",
@@ -544,7 +544,7 @@ const Management: React.FC = () => {
   return (
     <Box>
       <Grid container spacing={2} sx={{ marginTop: 6, padding: "12px" }}>
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <Box sx={{ width: "100%", textAlign: "right", marginBottom: "12px" }}>
             <Button variant="contained" onClick={handleTeamAddModalOpen}>
               + Add
@@ -586,7 +586,7 @@ const Management: React.FC = () => {
             />
           </Box>
         </Grid>
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <Box sx={{ width: "100%", textAlign: "right", marginBottom: "12px" }}>
             <Button variant="contained" onClick={handleAddModalOpen}>
               + Add
@@ -633,7 +633,7 @@ const Management: React.FC = () => {
             />
           </Box>
         </Grid>
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={12} md={4}>
           <Box sx={{ width: "100%", textAlign: "right", marginBottom: "12px" }}>
             <Button
               style={{ marginLeft: "8px" }}
