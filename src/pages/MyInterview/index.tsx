@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 
 import { Grid, Typography, Box } from "@mui/material";
+import BusinessIcon from "@mui/icons-material/Business";
+import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import * as api from "api";
 import { InterviewDetailType } from "api/types";
-import playBtn from "assets/play-btn.png";
 import { useNavigate } from "react-router";
 
 const MyInterview: React.FC = () => {
@@ -51,23 +52,18 @@ const MyInterview: React.FC = () => {
                     }
                     alt="thumbnail"
                   />
-                  <Box
-                    component="img"
-                    sx={{
-                      height: 50,
-                      width: 50,
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                    }}
-                    className="playBtn"
-                    alt="playbtn"
-                    src={playBtn}
-                  />
                 </Box>
-                <Typography>
-                  {interview.user.name} - {interview.name}
+                <Typography
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignSelf: "center",
+                  }}
+                >
+                  <SupportAgentIcon />
+                  {interview.user.name}
+                  <BusinessIcon />
+                  {interview.name}
                 </Typography>
               </Grid>
             );

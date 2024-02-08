@@ -28,3 +28,34 @@ code {
 .user-label {
   background-color: gray;
 }
+
+.interview-thumbnail img {
+  border-radius: 15px;
+  width: 100%;
+}
+
+.interview-thumbnail:hover {
+  opacity: 0.5;
+}
+
+.interview-thumbnail:hover .play-button {
+  visibility: visible;
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: 30%;
+  opacity: 1;
+}
+
+.interview-thumbnail .play-button {
+  visibility: hidden;
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
