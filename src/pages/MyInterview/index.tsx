@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 
 import { Grid, Typography, Box } from "@mui/material";
-import BusinessIcon from "@mui/icons-material/Business";
-import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import * as api from "api";
 import { InterviewDetailType } from "api/types";
 import { useNavigate } from "react-router";
