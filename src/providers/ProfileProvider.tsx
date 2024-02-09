@@ -29,12 +29,12 @@ export const ProfileProvider = ({ children }: { children: ReactElement }) => {
         const { data } = await api.GetCurrentUser();
         if (data.name) setProfile(data);
         else if (location.pathname !== "/login") {
-          navigator("/login");
+          navigator(`/login?redirectTo=${location.pathname}`);
           openSnackbar("Not authorized. Please login first.", "error");
         }
       } catch (error) {
         if (location.pathname !== "/login") {
-          navigator("/login");
+          navigator(`/login?redirectTo=${location.pathname}`);
           openSnackbar("Not authorized. Please login first.", "error");
         }
       }
