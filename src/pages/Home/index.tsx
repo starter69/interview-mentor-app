@@ -151,7 +151,7 @@ const Home = () => {
         container
         spacing={2}
         sx={{ padding: "12px" }}
-        columns={{ xs: 4, sm: 8, md: 8 }}
+        columns={{ sm: 4, md: 6, lg: 8 }}
       >
         {interviews.map((interview) => {
           return <InterviewCard interview={interview} />;

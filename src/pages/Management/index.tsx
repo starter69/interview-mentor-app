@@ -33,10 +33,10 @@ const teamStyle = {
   p: 4,
 };
 
-const teamColumns: GridColDef[] = [
-  { field: "index", headerName: "#", flex: 1 },
-  { field: "name", headerName: "Team", flex: 1 },
-];
+// const teamColumns: GridColDef[] = [
+//   { field: "index", headerName: "#", flex: 1 },
+//   { field: "name", headerName: "Team", flex: 1 },
+// ];
 
 const userStyle = {
   position: "absolute" as "absolute",
@@ -118,9 +118,9 @@ type User = {
 };
 
 const Management: React.FC = () => {
-  const [addTeamModalOpen, setAddTeamModalOpen] = useState(false);
-  const [updateTeamModalOpen, setUpdateTeamModalOpen] = useState(false);
-  const [deleteTeamModalOpen, setDeleteTeamModalOpen] = useState(false);
+  // const [addTeamModalOpen, setAddTeamModalOpen] = useState(false);
+  // const [updateTeamModalOpen, setUpdateTeamModalOpen] = useState(false);
+  // const [deleteTeamModalOpen, setDeleteTeamModalOpen] = useState(false);
   const [addUserModalOpen, setAddUserModalOpen] = useState(false);
   const [updateUserModalOpen, setUpdateUserModalOpen] = useState(false);
   const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
@@ -134,14 +134,14 @@ const Management: React.FC = () => {
   const [teams, setTeams] = useState<TeamInfo[]>([]);
   const [interviews, setInterviews] = useState<InterviewDetailType[]>([]);
   const [companyName, setCompanyName] = useState("");
-  const [originTeams, setOriginTeams] = useState<TeamInfo[]>([]);
+  // const [originTeams, setOriginTeams] = useState<TeamInfo[]>([]);
   const [role, setRole] = useState("USER");
-  const [teamName, setTeamName] = useState("");
+  // const [setTeamName] = useState("");
   const [team, setTeam] = useState("No Team");
   const [userName, setUserName] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [teamRowSelectionModel, setTeamRowSelectionModel] =
-    useState<GridRowSelectionModel>();
+  // const [teamRowSelectionModel, setTeamRowSelectionModel] =
+  //   useState<GridRowSelectionModel>();
   const [userRowSelectionModel, setUserRowSelectionModel] =
     useState<GridRowSelectionModel>();
   const [interviewRowSelectionModel, setInterviewRowSelectionModel] =
@@ -183,7 +183,7 @@ const Management: React.FC = () => {
       setUsers(formattedUsers);
       setTeams([{ id: -1, name: "No Team" }, ...response2.data]);
       setInterviews(response3.data);
-      setOriginTeams(response2.data);
+      // setOriginTeams(response2.data);
     } catch (error: any) {
       openSnackbar(
         error?.response?.data.error ??
@@ -201,104 +201,104 @@ const Management: React.FC = () => {
     setTeam(event.target.value);
   };
 
-  // Teams
-  const handleTeamAddModalOpen = () => {
-    setAddTeamModalOpen(true);
-  };
+  // // Teams
+  // const handleTeamAddModalOpen = () => {
+  //   setAddTeamModalOpen(true);
+  // };
 
-  const handleTeamAddClose = () => {
-    setAddTeamModalOpen(false);
-    init();
-  };
+  // const handleTeamAddClose = () => {
+  //   setAddTeamModalOpen(false);
+  //   init();
+  // };
 
-  const handleTeamUpdateOpen = () => {
-    if (!teamRowSelectionModel?.length) {
-      openSnackbar("Please select a team first.", "error");
-      return;
-    }
-    const index = Number(teamRowSelectionModel[0]);
-    const selectedTeam = teams.find((team) => team.id === index);
-    if (!selectedTeam) {
-      return;
-    }
-    setTeamName(selectedTeam.name);
-    setUpdateTeamModalOpen(true);
-  };
+  // const handleTeamUpdateOpen = () => {
+  //   if (!teamRowSelectionModel?.length) {
+  //     openSnackbar("Please select a team first.", "error");
+  //     return;
+  //   }
+  //   const index = Number(teamRowSelectionModel[0]);
+  //   const selectedTeam = teams.find((team) => team.id === index);
+  //   if (!selectedTeam) {
+  //     return;
+  //   }
+  //   setTeamName(selectedTeam.name);
+  //   // setUpdateTeamModalOpen(true);
+  // };
 
-  const handleTeamUpdateClose = () => {
-    setUpdateTeamModalOpen(false);
-    setTeamRowSelectionModel([]);
-    init();
-  };
+  // const handleTeamUpdateClose = () => {
+  //   // setUpdateTeamModalOpen(false);
+  //   setTeamRowSelectionModel([]);
+  //   init();
+  // };
 
-  const handleTeamDeleteOpen = () => {
-    if (!teamRowSelectionModel?.length) {
-      openSnackbar("Please select a team first.", "error");
-      return;
-    }
-    setDeleteTeamModalOpen(true);
-  };
+  // const handleTeamDeleteOpen = () => {
+  //   if (!teamRowSelectionModel?.length) {
+  //     openSnackbar("Please select a team first.", "error");
+  //     return;
+  //   }
+  //   setDeleteTeamModalOpen(true);
+  // };
 
-  const handleTeamDeleteClose = () => {
-    setDeleteTeamModalOpen(false);
-    setTeamRowSelectionModel([]);
-  };
+  // const handleTeamDeleteClose = () => {
+  //   setDeleteTeamModalOpen(false);
+  //   setTeamRowSelectionModel([]);
+  // };
 
-  const handleTeamAdd = async () => {
-    setIsSubmitted(true);
-    if (!teamName) return;
-    try {
-      await api.addTeam({ name: teamName });
-      fetchData();
-      openSnackbar("New team added successfully.", "success");
-    } catch (error: any) {
-      openSnackbar(
-        error?.response?.data.error ?? "Failed to add new team.",
-        "error"
-      );
-    }
-    handleTeamAddClose();
-  };
+  // const handleTeamAdd = async () => {
+  //   setIsSubmitted(true);
+  //   if (!teamName) return;
+  //   try {
+  //     await api.addTeam({ name: teamName });
+  //     fetchData();
+  //     openSnackbar("New team added successfully.", "success");
+  //   } catch (error: any) {
+  //     openSnackbar(
+  //       error?.response?.data.error ?? "Failed to add new team.",
+  //       "error"
+  //     );
+  //   }
+  //   // handleTeamAddClose();
+  // };
 
-  const handleTeamUpdate = async () => {
-    setIsSubmitted(true);
-    if (!teamName) return;
-    try {
-      if (!teamRowSelectionModel?.length) {
-        setConfirmModalOpen(true);
-        return;
-      }
-      await api.updateTeam(Number(teamRowSelectionModel[0]), {
-        name: teamName,
-      });
-      fetchData();
-      openSnackbar("Team updated successfully.", "success");
-    } catch (error: any) {
-      openSnackbar(
-        error?.response?.data.error ?? "Failed to update team.",
-        "error"
-      );
-    }
-    handleTeamUpdateClose();
-  };
+  // const handleTeamUpdate = async () => {
+  //   setIsSubmitted(true);
+  //   if (!teamName) return;
+  //   try {
+  //     if (!teamRowSelectionModel?.length) {
+  //       setConfirmModalOpen(true);
+  //       return;
+  //     }
+  //     await api.updateTeam(Number(teamRowSelectionModel[0]), {
+  //       name: teamName,
+  //     });
+  //     fetchData();
+  //     openSnackbar("Team updated successfully.", "success");
+  //   } catch (error: any) {
+  //     openSnackbar(
+  //       error?.response?.data.error ?? "Failed to update team.",
+  //       "error"
+  //     );
+  //   }
+  //   handleTeamUpdateClose();
+  // };
 
-  const handleTeamDelete = async () => {
-    try {
-      if (!teamRowSelectionModel?.length) {
-        setConfirmModalOpen(true);
-        return;
-      }
-      await api.deleteTeam(Number(teamRowSelectionModel[0]));
-      fetchData();
-      handleTeamDeleteClose();
-      openSnackbar("Team deleted successfully.", "success");
-    } catch (error: any) {
-      openSnackbar(
-        error?.response?.data.error ?? "Failed to delete team.",
-        "error"
-      );
-    }
-  };
+  // const handleTeamDelete = async () => {
+  //   try {
+  //     if (!teamRowSelectionModel?.length) {
+  //       setConfirmModalOpen(true);
+  //       return;
+  //     }
+  //     await api.deleteTeam(Number(teamRowSelectionModel[0]));
+  //     fetchData();
+  //     handleTeamDeleteClose();
+  //     openSnackbar("Team deleted successfully.", "success");
+  //   } catch (error: any) {
+  //     openSnackbar(
+  //       error?.response?.data.error ?? "Failed to delete team.",
+  //       "error"
+  //     );
+  //   }
+  // };
 
   // Users
 
@@ -536,7 +536,7 @@ const Management: React.FC = () => {
     setUserName("");
     setRole("USER");
     setTeam("No Team");
-    setTeamName("");
+    // setTeamName("");
     setCompanyName("");
     setIsSubmitted(false);
   }
@@ -544,7 +544,7 @@ const Management: React.FC = () => {
   return (
     <Box>
       <Grid container spacing={2} sx={{ marginTop: 6, padding: "12px" }}>
-        <Grid item xs={12} sm={6} md={4}>
+        {/* <Grid item xs={12} sm={6} md={4}>
           <Box sx={{ width: "100%", textAlign: "right", marginBottom: "12px" }}>
             <Button variant="contained" onClick={handleTeamAddModalOpen}>
               + Add
@@ -585,8 +585,8 @@ const Management: React.FC = () => {
               pageSizeOptions={[50, 10]}
             />
           </Box>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        </Grid> */}
+        <Grid item xs={12} sm={12} md={6}>
           <Box sx={{ width: "100%", textAlign: "right", marginBottom: "12px" }}>
             <Button variant="contained" onClick={handleAddModalOpen}>
               + Add
@@ -633,7 +633,7 @@ const Management: React.FC = () => {
             />
           </Box>
         </Grid>
-        <Grid item xs={12} sm={12} md={4}>
+        <Grid item xs={12} sm={12} md={6}>
           <Box sx={{ width: "100%", textAlign: "right", marginBottom: "12px" }}>
             <Button
               style={{ marginLeft: "8px" }}
@@ -673,7 +673,7 @@ const Management: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
-      <Modal open={addTeamModalOpen} onClose={handleTeamAddClose}>
+      {/* <Modal open={addTeamModalOpen} onClose={handleTeamAddClose}>
         <Box sx={teamStyle}>
           <Typography variant="h6" component="h2">
             Add New Team
@@ -758,7 +758,7 @@ const Management: React.FC = () => {
             </Button>
           </Box>
         </Box>
-      </Modal>
+      </Modal> */}
       <Modal open={addUserModalOpen} onClose={handleAddClose}>
         <Box sx={userStyle}>
           <Typography variant="h6" component="h2">

@@ -13,6 +13,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import * as api from "api";
 import { useSnackbar } from "providers/SnackbarProvider";
 import { useNavigate } from "react-router";
+import { useSearchParams } from "react-router-dom";
 
 function Copyright(props: any) {
   return (
@@ -40,6 +41,8 @@ export default function SignIn() {
   const [password, setPassword] = useState<string>("");
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const navigator = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo");
 
   const { openSnackbar } = useSnackbar();
 
@@ -50,7 +53,7 @@ export default function SignIn() {
       const { data } = await api.Login(credential);
       openSnackbar("Login successful", "success");
       localStorage.setItem("token", data.access_token);
-      navigator("/interviews");
+      navigator(redirectTo || "/interviews");
     } catch (error) {
       openSnackbar("Login failed", "error");
     }
